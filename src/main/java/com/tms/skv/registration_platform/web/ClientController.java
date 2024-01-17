@@ -4,12 +4,11 @@ import com.tms.skv.registration_platform.domain.Sex;
 import com.tms.skv.registration_platform.model.UserDto;
 import com.tms.skv.registration_platform.repository.ClientRepository;
 import com.tms.skv.registration_platform.service.DBUserDetailsService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 @RequiredArgsConstructor
@@ -22,32 +21,30 @@ public class ClientController {
     public String publicPage(){
         return "public";
     }
+    @GetMapping("/main")
+    public String mainPage(){
+        return "main";
+    }
 
-    /*@PostMapping("/login"){
-        public ModelAndView mainPage(@RequestParam(name = "login") String login, @RequestParam(name = "cred") String password)){
-            clientRepository.findByLogin(login).ifPresent( clientEntity-> {
-                if(clientEntity.getPassword().equals(password)){
-                    String token = tokenService.createToken(userEntity);
-                    response.setHeader("jwt-token", token);
-                }
-            })
-            return "main";
-        }
-    }*/
-
-    @GetMapping("/welcome")
+        @GetMapping("/welcome")
     public String logout(){
         return "welcome";
     }
 
     @PostMapping("/register")
-    public String save(UserDto user){
+    public String save(@Valid @ModelAttribute(name = "client")UserDto user, BindingResult result){
+        /*if(!result.hasFieldErrors()){
+            userService.save(user);
+            return "public";
+        }else {
+            return "register";
+        }*/
         userService.save(user);
         return "public";
     }
 
     @GetMapping("/register")
-    public ModelAndView registerPage(){
+    public ModelAndView registerPage(@ModelAttribute(name = "client")UserDto user){
         ModelAndView modelAndView = new ModelAndView("register");
         modelAndView.addObject("sexes", Sex.values());
         return modelAndView;

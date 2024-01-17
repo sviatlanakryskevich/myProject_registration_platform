@@ -8,27 +8,36 @@
 <body>
 <h1>Форма регистрации</h1>
 Укажите следующие данные:
-<form method="post" th:action="@{/register}">
+<form method="post" th:action="@{/register}" th:object="${client}">
     <label for="username">Имя пользователя:</label>
-    <input type="text" id="username" name="username"><br>
+    <input type="text" id="username" name="username" th:field="*{username}">
+    <p th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Incorrect date</p><br>
     <label for="password">Пароль:</label>
-    <input type="password" id="password" name="password"><br>
+    <input type="password" id="password" name="password" th:field="*{password}">
+    <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Incorrect date</p><br>
     <label for="firstName">Имя:</label>
-    <input type="text" id="firstName" name="firstName"><br>
+    <input type="text" id="firstName" name="firstName" th:field="*{firstName}">
+    <p th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">Incorrect date</p><br>
     <label for="lastName">Фамилия:</label>
-    <input type="text" id="lastName" name="lastName"><br>
+    <input type="text" id="lastName" name="lastName" th:field="*{lastName}">
+    <p th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">Incorrect date</p><br>
     <label for="sex">Пол:</label>
     <div th:each="sex: ${sexes}">
-        <input th:type="radio" id="sex" th:text="${sex.getRussianName()}"  th:value="${sex.name()}" th:name="sex"><br>
+        <input th:type="radio" id="sex" th:text="${sex.getRussianName()}"  th:value="${sex.name()}" th:name="sex" th:field="*{sex}">
+        <p th:if="${#fields.hasErrors('sex')}" th:errors="*{sex}">Incorrect date</p><br>
     </div>
     <label for="address">Адрес:</label>
-    <input type="text" id="address" name="address"><br>
+    <input type="text" id="address" name="address" th:field="*{address}">
+    <p th:if="${#fields.hasErrors('address')}" th:errors="*{address}">Incorrect date</p><br>
     <label for="birthday">Дата рождения:</label>
-    <input type="date" id="birthday" name="birthday" min="1930-12-31"><br>
+    <input type="date" id="birthday" name="birthday" min="1930-12-31" th:field="*{birthday}">
+    <p th:if="${#fields.hasErrors('birthday')}" th:errors="*{birthday}">Incorrect date</p><br>
     <label for="phoneNumber">Номер телефона:</label>
-    <input type="text" id="phoneNumber" name="phoneNumber"><br>
+    <input type="text" id="phoneNumber" name="phoneNumber" th:field="*{phoneNumber}">
+    <p th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}">Incorrect date</p><br>
     <label for="email">Адрес электронной почты:</label>
-    <input type="email" id="email" name="email"><br>
+    <input type="email" id="email" name="email" th:field="*{email}">
+    <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Incorrect date</p><br>
     <input type="submit" value="Отправить">
 </form>
 
