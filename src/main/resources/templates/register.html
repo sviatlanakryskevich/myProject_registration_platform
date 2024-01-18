@@ -8,7 +8,7 @@
 <body>
 <h1>Форма регистрации</h1>
 Укажите следующие данные:
-<form method="post" th:action="@{/register}" th:object="${client}">
+<form method="post" th:action="@{/register}" th:object="${userDto}">
     <label for="username">Имя пользователя:</label>
     <input type="text" id="username" name="username" th:field="*{username}">
     <p th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Incorrect date</p><br>

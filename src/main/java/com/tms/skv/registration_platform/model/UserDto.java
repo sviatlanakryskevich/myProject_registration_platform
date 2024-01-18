@@ -1,15 +1,13 @@
 package com.tms.skv.registration_platform.model;
 
 import com.tms.skv.registration_platform.domain.Sex;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.PastOrPresent;
-import javax.validation.constraints.Size;
+
 import java.time.LocalDate;
 
 @Data
@@ -28,11 +26,11 @@ public class UserDto {
     @NotBlank(message = "Обязательное поле")
     @Size(min = 2, max = 12, message = "Поле должно содержать от 6 до 12 символов")
     private String lastName;
-    @NotBlank(message = "Обязательное поле")
+    @NotNull(message = "Обязательное поле")
     private Sex sex;
     private String address;
-    @NotBlank(message = "Обязательное поле")
     @PastOrPresent(message = "Введите валидную дату рождения")
+    @NotNull(message = "Обязательное поле")
     private LocalDate birthday;
     @NotBlank(message = "Обязательное поле")
     private String phoneNumber;
