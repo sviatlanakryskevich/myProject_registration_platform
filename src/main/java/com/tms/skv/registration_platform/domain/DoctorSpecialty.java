@@ -21,7 +21,7 @@ public enum DoctorSpecialty {
         this.russianName = russianName;
     }
 
-    String getRussianName() {
+    public String getRussianName() {
         return russianName;
     }
 }

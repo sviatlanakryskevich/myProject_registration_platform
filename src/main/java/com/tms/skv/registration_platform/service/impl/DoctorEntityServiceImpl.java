@@ -1,0 +1,54 @@
+package com.tms.skv.registration_platform.service.impl;
+
+import com.tms.skv.registration_platform.domain.DoctorSpecialty;
+import com.tms.skv.registration_platform.entity.DoctorEntity;
+import com.tms.skv.registration_platform.mapper.DoctorMapper;
+import com.tms.skv.registration_platform.model.DoctorDto;
+import com.tms.skv.registration_platform.repository.DoctorRepository;
+import com.tms.skv.registration_platform.service.DoctorEntityService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
+import java.util.Optional;
+
+@Service
+@RequiredArgsConstructor
+
+public class DoctorEntityServiceImpl implements DoctorEntityService {
+    private final DoctorRepository doctorRepository;
+    private final DoctorMapper mapper;
+    @Override
+    public List<DoctorEntity> findAll() {
+        List<DoctorEntity> all = doctorRepository.findAll();
+        return all;
+    }
+
+    @Override
+    public List<DoctorEntity> findBySpecialty(DoctorSpecialty specialty) {
+        List<DoctorEntity> bySpecialty = doctorRepository.findByDoctorSpecialty(specialty);
+        return bySpecialty;
+    }
+
+    @Override
+    @Transactional
+    public void save(DoctorDto doctorDto) {
+        DoctorEntity entity = mapper.toEntity(doctorDto);
+        doctorRepository.save(entity);
+    }
+
+    @Override
+    @Transactional
+    public void update(Integer id) {
+
+    }
+
+    @Override
+    public void delete(Integer id)  {
+        Optional<DoctorEntity> doctorEntity = doctorRepository.findById(id);
+
+        doctorEntity.isPresent(doctorRepository.delete(doctorEntity);
+
+
+    }
+}

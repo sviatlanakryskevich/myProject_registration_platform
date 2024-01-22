@@ -1,4 +1,4 @@
-package com.tms.skv.registration_platform.service;
+package com.tms.skv.registration_platform.service.impl;
 
 import com.tms.skv.registration_platform.domain.Sex;
 import com.tms.skv.registration_platform.entity.ClientEntity;

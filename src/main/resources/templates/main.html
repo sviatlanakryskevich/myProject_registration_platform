@@ -1,10 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Main</title>
 </head>
 <body>
-Hello from main
+<form method="post" th:action="@{/logout}">
+    <input type="submit" th:value="Logout">
+</form>
+Наши врачи:
+<form method="post" th:action="@{/main}">
+    <div >
+        <ul>
+            <li th:each="specialty: ${specialties}"><a th:href="@{/get}">[[${specialty.getRussianName()}]]</a></li>
+        </ul>
+    </div>
+</form>
+
 </body>
 </html>
