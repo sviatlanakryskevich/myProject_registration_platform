@@ -2,10 +2,7 @@ package com.tms.skv.registration_platform.entity;
 
 import com.tms.skv.registration_platform.domain.Sex;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -36,6 +33,10 @@ public class ClientEntity implements UserDetails {
     private LocalDate birthday;
     private String phoneNumber;
     private String email;
+
+    @OneToMany(mappedBy = "client")
+    @ToString.Exclude
+    private List<OrderEntity> orders;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

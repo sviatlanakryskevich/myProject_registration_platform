@@ -10,6 +10,6 @@ public interface DoctorEntityService {
     List<DoctorEntity> findAll();
     List<DoctorEntity> findBySpecialty(DoctorSpecialty specialty);
     void save(DoctorDto doctorDto);
-    void update(Integer id);
+    void update(DoctorDto dto);
     void delete(Integer id);
 }

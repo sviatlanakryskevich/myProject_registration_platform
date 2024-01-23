@@ -2,6 +2,7 @@ package com.tms.skv.registration_platform.service.impl;
 
 import com.tms.skv.registration_platform.domain.DoctorSpecialty;
 import com.tms.skv.registration_platform.entity.DoctorEntity;
+import com.tms.skv.registration_platform.exc.NotFoundException;
 import com.tms.skv.registration_platform.mapper.DoctorMapper;
 import com.tms.skv.registration_platform.model.DoctorDto;
 import com.tms.skv.registration_platform.repository.DoctorRepository;
@@ -39,16 +40,26 @@ public class DoctorEntityServiceImpl implements DoctorEntityService {
 
     @Override
     @Transactional
-    public void update(Integer id) {
-
+    public void update(DoctorDto doctorDto) {
+        Integer id = doctorDto.getId();
+        Optional<DoctorEntity> doctorOpt = doctorRepository.findById(id);
+        if(doctorOpt.isPresent()){
+            DoctorEntity doctorEntity = mapper.toEntity(doctorDto);
+            doctorRepository.save(doctorEntity);
+        }else {
+            throw new NotFoundException("Doctor with this id not found");
+        }
     }
 
     @Override
     public void delete(Integer id)  {
-        Optional<DoctorEntity> doctorEntity = doctorRepository.findById(id);
-
-        doctorEntity.isPresent(doctorRepository.delete(doctorEntity);
-
+        Optional<DoctorEntity> doctorOpt = doctorRepository.findById(id);
+        if(doctorOpt.isPresent()){
+            DoctorEntity doctorEntity = doctorOpt.get();
+            doctorRepository.delete(doctorEntity);
+        }else {
+            throw new NotFoundException("Doctor with this id not found");
+        }
 
     }
 }
