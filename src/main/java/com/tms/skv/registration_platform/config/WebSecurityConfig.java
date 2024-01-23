@@ -15,7 +15,7 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(cust -> {
             cust.requestMatchers("/public","/register", "/login", "/logout", "/welcome").permitAll()
-                    .requestMatchers("/main").authenticated();
+                    .requestMatchers("/main", "/get/**").authenticated();
                     /*.requestMatchers("/main").hasAnyRole("USER");*/
         });
         http.formLogin(cust -> {

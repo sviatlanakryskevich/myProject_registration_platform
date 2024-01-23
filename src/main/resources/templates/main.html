@@ -13,7 +13,8 @@
 <form method="post" th:action="@{/main}">
     <div >
         <ul>
-            <li th:each="specialty: ${specialties}"><a th:href="@{/get}">[[${specialty.getRussianName()}]]</a></li>
+            <li th:each="specialty: ${specialties}">
+                <a th:href="@{/get/{specialty} (specialty=${specialty.name()})}">[[${specialty.getRussianName()}]]</a></li>
         </ul>
     </div>
 </form>
