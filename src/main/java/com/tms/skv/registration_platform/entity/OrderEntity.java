@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Data
 @AllArgsConstructor
@@ -18,7 +19,7 @@ public class OrderEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime appointmentTime;
+    private Date appointmentTime;
 
     @ManyToOne
     @JoinColumn(name="client_id", nullable=false)

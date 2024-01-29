@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<table>
+  <thead>
+  <tr>
+      <th>Day</th>
+    <th th:text="${#dates.dayOfWeekName(timeNow)}"></th>
+  </tr>
+  </thead>
+  <tbody>
+  <!--<tr th:each="row,rowStat : *{rows}">
+    <td th:text="${rowStat.count}">1</td>
+    <td>
+      <select th:field="*{rows[__${rowStat.index}__].variety}">
+        <option th:each="var : ${allVarieties}"
+                th:value="${var.id}"
+                th:text="${var.name}">Thymus Thymi</option>
+      </select>
+    </td>
+    <td>
+      <input type="text" th:field="*{rows[__${rowStat.index}__].seedsPerCell}" />
+    </td>
+    <td>
+      <button type="submit" name="removeRow"
+              th:value="${rowStat.index}" th:text="#{seedstarter.row.remove}">Remove row</button>
+    </td>
+  </tr>
+  </tbody>-->
+</table>
+</body>
+</html>
