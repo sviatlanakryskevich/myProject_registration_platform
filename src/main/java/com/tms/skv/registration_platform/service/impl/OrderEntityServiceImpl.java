@@ -14,7 +14,7 @@ import java.util.List;
 public class OrderEntityServiceImpl implements OrderEntityService {
     private final OrderRepository orderRepository;
     @Override
-    public List<OrderEntity> getDoctorOrdersByTime(Date from, Date to, Integer doctorId) {
+    public List<OrderEntity> getDoctorOrdersByTime(LocalDateTime from, LocalDateTime to, Integer doctorId) {
         List<OrderEntity> ordersByTime = orderRepository.findByAppointmentTimeAfterAndAppointmentTimeBeforeAndAndDoctor_Id(from, to, doctorId);
         return ordersByTime;
     }

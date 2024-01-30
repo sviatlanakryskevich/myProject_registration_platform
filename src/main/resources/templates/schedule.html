@@ -9,29 +9,17 @@
 <table>
   <thead>
   <tr>
-      <th>Day</th>
-    <th th:text="${#dates.dayOfWeekName(timeNow)}"></th>
+    <th th:each="day: ${currentWeek}" th:text="${#temporals.format(day, 'EEEE')}"></th>
+  </tr>
+  <tr>
+      <th th:each="day: ${currentWeek}" th:text="${#temporals.format(day, 'dd-MM-yyyy')}"></th>
   </tr>
   </thead>
   <tbody>
-  <!--<tr th:each="row,rowStat : *{rows}">
-    <td th:text="${rowStat.count}">1</td>
-    <td>
-      <select th:field="*{rows[__${rowStat.index}__].variety}">
-        <option th:each="var : ${allVarieties}"
-                th:value="${var.id}"
-                th:text="${var.name}">Thymus Thymi</option>
-      </select>
-    </td>
-    <td>
-      <input type="text" th:field="*{rows[__${rowStat.index}__].seedsPerCell}" />
-    </td>
-    <td>
-      <button type="submit" name="removeRow"
-              th:value="${rowStat.index}" th:text="#{seedstarter.row.remove}">Remove row</button>
-    </td>
+  <tr th:each="time: ${intervals.keySet()}">
+    <td th:each="day: ${intervals.get(time)}" th:text="${#temporals.format(time, 'HH:mm')}">    </td>
   </tr>
-  </tbody>-->
+  </tbody>
 </table>
 </body>
 </html>

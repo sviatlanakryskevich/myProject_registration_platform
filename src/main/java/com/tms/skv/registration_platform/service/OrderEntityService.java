@@ -6,5 +6,5 @@ import java.util.Date;
 import java.util.List;
 
 public interface OrderEntityService {
-    List<OrderEntity> getDoctorOrdersByTime(Date from, Date to, Integer doctorId);
+    List<OrderEntity> getDoctorOrdersByTime(LocalDateTime from,LocalDateTime to, Integer doctorId);
 }

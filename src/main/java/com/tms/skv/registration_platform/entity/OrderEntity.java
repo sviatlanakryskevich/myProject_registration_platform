@@ -19,7 +19,7 @@ public class OrderEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Temporal(TemporalType.TIMESTAMP)
-    private Date appointmentTime;
+    private LocalDateTime appointmentTime;
 
     @ManyToOne
     @JoinColumn(name="client_id", nullable=false)
