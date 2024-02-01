@@ -18,4 +18,9 @@ public class OrderEntityServiceImpl implements OrderEntityService {
         List<OrderEntity> ordersByTime = orderRepository.findByAppointmentTimeAfterAndAppointmentTimeBeforeAndAndDoctor_Id(from, to, doctorId);
         return ordersByTime;
     }
+
+    @Override
+    public OrderEntity createOrder(Integer doctorId, Integer clientId, LocalDateTime appointmentTime) {
+        return null;
+    }
 }

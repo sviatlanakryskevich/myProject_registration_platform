@@ -11,5 +11,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class Record {
     private LocalDateTime appointment;
-    private boolean isFree;
+    private boolean isOrdered;
+    private Integer doctorId;
 }

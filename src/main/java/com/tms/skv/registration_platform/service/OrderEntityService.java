@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface OrderEntityService {
     List<OrderEntity> getDoctorOrdersByTime(LocalDateTime from,LocalDateTime to, Integer doctorId);
+    OrderEntity createOrder(Integer doctorId, Integer clientId, LocalDateTime appointmentTime);
 }
