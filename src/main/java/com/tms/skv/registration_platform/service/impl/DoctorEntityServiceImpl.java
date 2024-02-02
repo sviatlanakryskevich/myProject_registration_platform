@@ -26,6 +26,17 @@ public class DoctorEntityServiceImpl implements DoctorEntityService {
     }
 
     @Override
+    public DoctorEntity findById(Integer id) {
+        Optional<DoctorEntity> doctorOpt = doctorRepository.findById(id);
+        if(doctorOpt.isPresent()){
+            DoctorEntity doctorEntity = doctorOpt.get();
+            return doctorEntity;
+        }else {
+            throw new NotFoundException("Doctor with this id not found");
+        }
+    }
+
+    @Override
     public List<DoctorEntity> findBySpecialty(DoctorSpecialty specialty) {
         List<DoctorEntity> bySpecialty = doctorRepository.findByDoctorSpecialty(specialty);
         return bySpecialty;

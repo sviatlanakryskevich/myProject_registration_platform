@@ -1,5 +1,7 @@
 package com.tms.skv.registration_platform.service.impl;
 
+import com.tms.skv.registration_platform.entity.ClientEntity;
+import com.tms.skv.registration_platform.entity.DoctorEntity;
 import com.tms.skv.registration_platform.entity.OrderEntity;
 import com.tms.skv.registration_platform.repository.OrderRepository;
 import com.tms.skv.registration_platform.service.OrderEntityService;
@@ -20,7 +22,13 @@ public class OrderEntityServiceImpl implements OrderEntityService {
     }
 
     @Override
-    public OrderEntity createOrder(Integer doctorId, Integer clientId, LocalDateTime appointmentTime) {
-        return null;
+    public OrderEntity createOrder(DoctorEntity doctor, ClientEntity client, LocalDateTime appointmentTime) {
+        OrderEntity order = OrderEntity.builder()
+                .appointmentTime(appointmentTime)
+                .client(client)
+                .doctor(doctor)
+                .build();
+        OrderEntity save = orderRepository.save(order);
+        return save;
     }
 }

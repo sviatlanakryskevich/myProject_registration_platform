@@ -31,9 +31,7 @@ import java.util.stream.Collectors;
 public class AppointmentController {
     private final DoctorEntityServiceImpl doctorEntityService;
     private final OrderEntityServiceImpl orderEntityService;
-    private final ClientEntity client;
-
-
+    
     @GetMapping("/main")
     public ModelAndView mainPage() {
         ModelAndView modelAndView = new ModelAndView("main");
@@ -101,25 +99,20 @@ public class AppointmentController {
 
         }
 
-
-
         ModelAndView modelAndView = new ModelAndView("schedule");
         modelAndView.addObject("currentWeek", currentWeek);
         modelAndView.addObject("intervals", intervals);
-        /*
-        /*orderEntityService.getDoctorOrdersByTime();*/
         return modelAndView;
     }
-    /*INSERT into doctors VALUES (2.0, 1, 'true','THERAPIST','doctor1');*/
+
     @PostMapping("/createOrder")
-    public ModelAndView createOrder(Record record){
-        Integer doctorId = record.getDoctorId();
-        LocalDateTime appointment = record.getAppointment();
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-
-
+    public ModelAndView createOrder(@RequestParam(value = "doctorId") Integer doctorId,
+                                    @RequestParam(value = "appointment") LocalDateTime appointment){
+        DoctorEntity doctor = doctorEntityService.findById(doctorId);
+        ClientEntity client = (ClientEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        OrderEntity savedOrder = orderEntityService.createOrder(doctor, client, appointment);
         ModelAndView modelAndView = new ModelAndView("order");
+        modelAndView.addObject("savedOrder", savedOrder);
         return modelAndView;
     }
 }

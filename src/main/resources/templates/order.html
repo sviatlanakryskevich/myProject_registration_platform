@@ -6,6 +6,11 @@
     <title>Title</title>
 </head>
 <body>
-Hello
+<div th:object="${savedOrder}">
+    <p th:text="${savedOrder.getAppointmentTime()}"></p>
+    <button>
+        <a th:href="@{/schedule/{id} (id=${savedOrder.getDoctor().getId()})}">Назад</a>
+    </button>
+</div>
 </body>
 </html>

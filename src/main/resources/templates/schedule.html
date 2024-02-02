@@ -18,8 +18,8 @@
   <tbody>
   <tr th:each="time: ${intervals.keySet()}">
     <td th:each="record: ${intervals.get(time)}">
-        <form method="post" th:action="@{/createOrder}" th:object="record">
-            <input type="submit"  th:disabled="${record.isOrdered()}" th:value="${#temporals.format(time, 'HH:mm')}">
+        <form method="post" th:action="@{/createOrder(doctorId = ${record.getDoctorId()}, appointment = ${record.getAppointment()})}">
+            <input type="submit" th:disabled="${record.isOrdered()}" th:value="${#temporals.format(time, 'HH:mm')}">
         </form>
     </td>
   </tr>
