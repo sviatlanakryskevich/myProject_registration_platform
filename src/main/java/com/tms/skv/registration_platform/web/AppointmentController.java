@@ -2,17 +2,13 @@ package com.tms.skv.registration_platform.web;
 
 import com.tms.skv.registration_platform.domain.DoctorSpecialty;
 import com.tms.skv.registration_platform.domain.Record;
-import com.tms.skv.registration_platform.entity.ClientEntity;
+import com.tms.skv.registration_platform.entity.UserEntity;
 import com.tms.skv.registration_platform.entity.DoctorEntity;
 import com.tms.skv.registration_platform.entity.OrderEntity;
-import com.tms.skv.registration_platform.service.impl.DBUserDetailsService;
 import com.tms.skv.registration_platform.service.impl.DoctorEntityServiceImpl;
 import com.tms.skv.registration_platform.service.impl.OrderEntityServiceImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -109,7 +105,7 @@ public class AppointmentController {
     public ModelAndView createOrder(@RequestParam(value = "doctorId") Integer doctorId,
                                     @RequestParam(value = "appointment") LocalDateTime appointment){
         DoctorEntity doctor = doctorEntityService.findById(doctorId);
-        ClientEntity client = (ClientEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserEntity client = (UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         OrderEntity savedOrder = orderEntityService.createOrder(doctor, client, appointment);
         ModelAndView modelAndView = new ModelAndView("order");
         modelAndView.addObject("savedOrder", savedOrder);

@@ -7,23 +7,25 @@
 </head>
 <body>
 <table>
-  <thead>
-  <tr>
-    <th th:each="day: ${currentWeek}" th:text="${#temporals.format(day, 'EEEE')}"></th>
-  </tr>
-  <tr>
-      <th th:each="day: ${currentWeek}" th:text="${#temporals.format(day, 'dd-MM-yyyy')}"></th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr th:each="time: ${intervals.keySet()}">
-    <td th:each="record: ${intervals.get(time)}">
-        <form method="post" th:action="@{/createOrder(doctorId = ${record.getDoctorId()}, appointment = ${record.getAppointment()})}">
-            <input type="submit" th:disabled="${record.isOrdered()}" th:value="${#temporals.format(time, 'HH:mm')}">
-        </form>
-    </td>
-  </tr>
-  </tbody>
+    <thead>
+    <tr>
+        <th th:each="day: ${currentWeek}" th:text="${#temporals.format(day, 'EEEE')}"></th>
+    </tr>
+    <tr>
+        <th th:each="day: ${currentWeek}" th:text="${#temporals.format(day, 'dd-MM-yyyy')}"></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="time: ${intervals.keySet()}">
+        <td th:each="record: ${intervals.get(time)}">
+            <!--TODO: check how to make it via body-->
+            <form method="post"
+                  th:action="@{/createOrder(doctorId = ${record.getDoctorId()}, appointment = ${record.getAppointment()})}">
+                <input type="submit" th:disabled="${record.isOrdered()}" th:value="${#temporals.format(time, 'HH:mm')}">
+            </form>
+        </td>
+    </tr>
+    </tbody>
 </table>
 </body>
 </html>

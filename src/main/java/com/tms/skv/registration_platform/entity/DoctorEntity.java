@@ -22,7 +22,6 @@ public class DoctorEntity {
     @Enumerated(EnumType.STRING)
     private DoctorSpecialty doctorSpecialty;
     private Double experience;
-    private boolean isKnowledgeOfEnglish;
 
     @OneToMany(mappedBy = "doctor")
     @ToString.Exclude

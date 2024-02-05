@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Data
 @AllArgsConstructor
@@ -20,9 +19,9 @@ public class OrderEntity {
     private LocalDateTime appointmentTime;
 
     @ManyToOne
-    @JoinColumn(name="client_id", nullable=false)
+    @JoinColumn(name="user_id", nullable=false)
     @ToString.Exclude
-    private ClientEntity client;
+    private UserEntity client;
 
     @ManyToOne
     @JoinColumn(name="doctor_id", nullable=false)

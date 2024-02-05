@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>ФИО</th>
+        <th>Специальность</th>
+        <th>Опыт</th>
+    </tr>
+    <tr th:each="doctor : ${allDoctors}">
+        <td th:text="${doctor.getId()}"></td>
+        <td th:text="${doctor.getFullName()}"></td>
+        <td th:text="${doctor.getDoctorSpecialty()}"></td>
+        <td th:text="${doctor.getExperience()}"></td>
+    </tr>
+
+    <button><a th:href="@{/createDoctor}">Создать нового врача</a></button>
+</table>
+</body>
+</html>

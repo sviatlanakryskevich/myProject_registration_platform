@@ -6,17 +6,15 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface DoctorMapper{
-    /*@Mapping(target = "id", source = "id")
+    @Mapping(target = "id", source = "id")
     @Mapping(target = "fullName", source = "fullName")
     @Mapping(target = "doctorSpecialty", source = "doctorSpecialty")
     @Mapping(target = "experience", source = "experience")
-    @Mapping(target = "isKnowledgeOfEnglish", source = "isKnowledgeOfEnglish")*/
     DoctorEntity toEntity(DoctorDto dto);
 
-    /*@Mapping(target = "id", source = "id")
+    @Mapping(target = "id", source = "id")
     @Mapping(target = "fullName", source = "fullName")
     @Mapping(target = "doctorSpecialty", source = "doctorSpecialty")
     @Mapping(target = "experience", source = "experience")
-    @Mapping(target = "isKnowledgeOfEnglish", source = "isKnowledgeOfEnglish")*/
     DoctorDto toDto(DoctorEntity entity);
 }

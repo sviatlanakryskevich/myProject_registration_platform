@@ -1,6 +1,6 @@
 package com.tms.skv.registration_platform.service.impl;
 
-import com.tms.skv.registration_platform.entity.ClientEntity;
+import com.tms.skv.registration_platform.entity.UserEntity;
 import com.tms.skv.registration_platform.entity.DoctorEntity;
 import com.tms.skv.registration_platform.entity.OrderEntity;
 import com.tms.skv.registration_platform.repository.OrderRepository;
@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 @Service
 @RequiredArgsConstructor
@@ -22,7 +21,7 @@ public class OrderEntityServiceImpl implements OrderEntityService {
     }
 
     @Override
-    public OrderEntity createOrder(DoctorEntity doctor, ClientEntity client, LocalDateTime appointmentTime) {
+    public OrderEntity createOrder(DoctorEntity doctor, UserEntity client, LocalDateTime appointmentTime) {
         OrderEntity order = OrderEntity.builder()
                 .appointmentTime(appointmentTime)
                 .client(client)

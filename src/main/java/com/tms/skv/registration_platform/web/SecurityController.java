@@ -2,7 +2,6 @@ package com.tms.skv.registration_platform.web;
 
 import com.tms.skv.registration_platform.domain.Sex;
 import com.tms.skv.registration_platform.model.UserDto;
-import com.tms.skv.registration_platform.repository.ClientRepository;
 import com.tms.skv.registration_platform.service.impl.DBUserDetailsService;
 
 import lombok.RequiredArgsConstructor;
@@ -18,17 +17,16 @@ import javax.validation.Valid;
 @RequestMapping
 public class SecurityController {
     private final DBUserDetailsService userService;
-    private final ClientRepository clientRepository;
     @GetMapping("/public")
     public ModelAndView publicPage(UserDto userDto){
         ModelAndView modelAndView = new ModelAndView("public");
         return modelAndView;
     }
 
-
-        @GetMapping("/welcome")
-    public String logout(){
-        return "welcome";
+    @GetMapping("/logout")
+    public ModelAndView logout(){
+        ModelAndView modelAndView = new ModelAndView("public");
+        return modelAndView;
     }
 
     @PostMapping("/register")

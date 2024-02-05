@@ -1,9 +1,9 @@
 package com.tms.skv.registration_platform.service.impl;
 
 import com.tms.skv.registration_platform.domain.Sex;
-import com.tms.skv.registration_platform.entity.ClientEntity;
+import com.tms.skv.registration_platform.entity.UserEntity;
 import com.tms.skv.registration_platform.model.UserDto;
-import com.tms.skv.registration_platform.repository.ClientRepository;
+import com.tms.skv.registration_platform.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,10 +18,10 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 public class DBUserDetailsService implements UserDetailsService {
     private final PasswordEncoder encoder;
-    private final ClientRepository clientRepository;
+    private final UserRepository userRepository;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return clientRepository.findByLogin(username)
+        return userRepository.findByLogin(username)
                 .orElse(null);
     }
     @Transactional
@@ -35,7 +35,7 @@ public class DBUserDetailsService implements UserDetailsService {
         String lastName = user.getLastName();
         Sex sex = user.getSex();
         String phoneNumber = user.getPhoneNumber();
-        ClientEntity clientEntity = ClientEntity.builder()
+        UserEntity userEntity = UserEntity.builder()
                 .address(address)
                 .email(email)
                 .login(username)
@@ -47,6 +47,6 @@ public class DBUserDetailsService implements UserDetailsService {
                 .phoneNumber(phoneNumber)
                 .perm("ROLE_USER")
                 .build();
-        clientRepository.save(clientEntity);
+        userRepository.save(userEntity);
     }
 }

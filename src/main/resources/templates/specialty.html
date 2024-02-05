@@ -8,8 +8,7 @@
 <body>
     <div >
         <ul>
-            <li th:each="doctor: ${doctorsBySpecialty}"><div>[[${doctor.fullName}]] - опыт:[[${doctor.experience}]] года/лет -
-                знание английского языка: [[${doctor.isKnowledgeOfEnglish}]]</div>
+            <li th:each="doctor: ${doctorsBySpecialty}"><div>[[${doctor.fullName}]] - опыт:[[${doctor.experience}]] года/лет</div>
                 <button><a th:href="@{/schedule/{id} (id=${doctor.getId()})}">Записаться на прием</a></button>
             </li>
         </ul>

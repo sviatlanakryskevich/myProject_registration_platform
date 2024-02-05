@@ -5,18 +5,26 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+
+import java.util.Collection;
+import java.util.List;
 
 @Configuration
 public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(cust -> {
-            cust.requestMatchers("/public","/register", "/login", "/logout", "/welcome").permitAll()
-                    .requestMatchers("/main", "/get/**", "/schedule/**", "/createOrder").authenticated();
-                    /*.requestMatchers("/main").hasAnyRole("USER");*/
+            cust.requestMatchers("/public", "/register", "/login", "/logout").permitAll()
+                    .requestMatchers("/main", "/get/**", "/schedule/**", "/createOrder").authenticated()
+                    .requestMatchers("/admin", "/createDoctor").hasRole("ADMIN");
         });
         http.formLogin(cust -> {
             cust.loginPage("/public");
@@ -24,7 +32,13 @@ public class WebSecurityConfig {
             cust.usernameParameter("login");
             cust.passwordParameter("cred");
             cust.successHandler(((request, response, authentication) -> {
-                response.sendRedirect("/main");
+                var authorities = authentication.getAuthorities();
+                List<String> stringAuthorities = authorities.stream().map(GrantedAuthority::getAuthority).toList();
+                if (stringAuthorities.contains("ROLE_ADMIN")) {
+                    response.sendRedirect("/admin");
+                } else {
+                    response.sendRedirect("/main");
+                }
             }));
             cust.failureHandler(((request, response, exception) -> {
                 response.sendRedirect("/public");
@@ -32,7 +46,7 @@ public class WebSecurityConfig {
         });
         http.logout(cust -> {
             cust.logoutUrl("/logout");
-            cust.logoutSuccessUrl("/welcome");
+            cust.logoutSuccessUrl("/public");
             cust.invalidateHttpSession(true);
 
         });
@@ -43,7 +57,7 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 }
