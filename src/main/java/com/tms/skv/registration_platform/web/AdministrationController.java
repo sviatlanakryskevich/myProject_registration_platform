@@ -3,6 +3,7 @@ package com.tms.skv.registration_platform.web;
 import com.tms.skv.registration_platform.domain.DoctorSpecialty;
 import com.tms.skv.registration_platform.domain.Sex;
 import com.tms.skv.registration_platform.entity.DoctorEntity;
+import com.tms.skv.registration_platform.mapper.DoctorMapper;
 import com.tms.skv.registration_platform.model.DoctorDto;
 import com.tms.skv.registration_platform.model.UserDto;
 import com.tms.skv.registration_platform.service.impl.DoctorEntityServiceImpl;
@@ -12,6 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
@@ -22,6 +24,7 @@ import java.util.List;
 @RequestMapping
 public class AdministrationController {
     private final DoctorEntityServiceImpl doctorEntityService;
+    private final DoctorMapper doctorMapper;
 
     @GetMapping("/admin")
     public ModelAndView getAllDoctors() {
@@ -32,17 +35,32 @@ public class AdministrationController {
     }
 
     @GetMapping("/createDoctor")
-    public ModelAndView createFormPage(DoctorDto doctorDto) {
+    public ModelAndView createFormPage() {
         ModelAndView modelAndView = new ModelAndView("createDoctor");
         modelAndView.addObject("specialties", DoctorSpecialty.values());
+        modelAndView.addObject("doctorDto", new DoctorDto());
+        return modelAndView;
+    }
+
+    @GetMapping("/updateDoctor")
+    public ModelAndView updateFormPage(@RequestParam(value = "doctorId", required = true)Integer doctorId) {
+        DoctorEntity doctor = doctorEntityService.findById(doctorId);
+        DoctorDto dto = doctorMapper.toDto(doctor);
+        ModelAndView modelAndView = new ModelAndView("createDoctor");
+        modelAndView.addObject("specialties", DoctorSpecialty.values());
+        modelAndView.addObject("doctorDto", dto);
         return modelAndView;
     }
 
     @PostMapping("/createDoctor")
-    public ModelAndView create(@Valid DoctorDto doctorDto, BindingResult result) {
+    public ModelAndView saveDoctor(@Valid DoctorDto doctorDto, BindingResult result) {
         if (!result.hasFieldErrors()) {
             ModelAndView modelAndView = new ModelAndView("admin");
-            doctorEntityService.save(doctorDto);
+            if(doctorDto.getId() !=null){
+                doctorEntityService.update(doctorDto);
+            }else{
+                doctorEntityService.save(doctorDto);
+            }
             List<DoctorEntity> allDoctors = doctorEntityService.findAll();
             modelAndView.addObject("allDoctors", allDoctors);
             return modelAndView;
@@ -51,5 +69,14 @@ public class AdministrationController {
             modelAndView.addObject("specialties", DoctorSpecialty.values());
             return modelAndView;
         }
+    }
+
+    @GetMapping("/deleteDoctor")
+    public ModelAndView delete(@RequestParam(value = "doctorId")Integer doctorId){
+        ModelAndView modelAndView = new ModelAndView("admin");
+        doctorEntityService.delete(doctorId);
+        List<DoctorEntity> allDoctors = doctorEntityService.findAll();
+        modelAndView.addObject("allDoctors", allDoctors);
+        return modelAndView;
     }
 }
