@@ -6,6 +6,7 @@
     <title>Title</title>
 </head>
 <body>
+<div th:replace="fragments/logout::logout"></div>
 <form action="/createDoctor" method="post" th:object="${doctorDto}">
     <fieldset>
         <legend th:hidden="(*{id} != null)">Создать нового доктора:</legend>

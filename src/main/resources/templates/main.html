@@ -6,9 +6,7 @@
     <title>Main</title>
 </head>
 <body>
-<form method="post" th:action="@{/logout}">
-    <input type="submit" th:value="Logout">
-</form>
+<div th:replace="fragments/logout::logout"></div>
 Наши врачи:
 <form method="post" th:action="@{/main}">
     <div >

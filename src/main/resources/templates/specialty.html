@@ -6,12 +6,16 @@
     <title>Title</title>
 </head>
 <body>
-    <div >
-        <ul>
-            <li th:each="doctor: ${doctorsBySpecialty}"><div>[[${doctor.fullName}]] - опыт:[[${doctor.experience}]] года/лет</div>
-                <button><a th:href="@{/schedule/{id} (id=${doctor.getId()})}">Записаться на прием</a></button>
-            </li>
-        </ul>
-    </div>
+<div th:replace="fragments/logout::logout"></div>
+<button>
+    <a th:href="@{/main}">На главную</a>
+</button>
+<div >
+    <ul>
+        <li th:each="doctor: ${doctorsBySpecialty}"><div>[[${doctor.fullName}]] - опыт:[[${doctor.experience}]] года/лет</div>
+            <button><a th:href="@{/schedule/{id} (id=${doctor.getId()})}">Записаться на прием</a></button>
+        </li>
+    </ul>
+</div>
 </body>
 </html>

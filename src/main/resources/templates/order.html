@@ -6,8 +6,10 @@
     <title>Title</title>
 </head>
 <body>
+<div th:replace="fragments/logout::logout"></div>
 <div th:object="${savedOrder}">
-    <p th:text="${savedOrder.getAppointmentTime()}"></p>
+    <div th:text="'Вы записаны к '+ ${savedOrder.getDoctor().getFullName()} + ' на '
+    + |${#temporals.format(savedOrder.getAppointmentTime(), 'dd.MM.yyyy HH:mm')}|"></div>
     <button>
         <a th:href="@{/schedule/{id} (id=${savedOrder.getDoctor().getId()})}">Назад</a>
     </button>

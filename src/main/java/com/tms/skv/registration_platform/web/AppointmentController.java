@@ -94,10 +94,11 @@ public class AppointmentController {
             startWeekTime = startWeekTime.plusMinutes(30);
 
         }
-
+        DoctorEntity doctor = doctorEntityService.findById(doctorId);
         ModelAndView modelAndView = new ModelAndView("schedule");
         modelAndView.addObject("currentWeek", currentWeek);
         modelAndView.addObject("intervals", intervals);
+        modelAndView.addObject("doctor", doctor);
         return modelAndView;
     }
 

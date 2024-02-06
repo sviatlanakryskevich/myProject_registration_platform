@@ -6,7 +6,12 @@
     <title>Title</title>
 </head>
 <body>
+<div th:replace="fragments/logout::logout"></div>
+<button>
+    <a th:href="@{/get/{specialty} (specialty=${doctor.doctorSpecialty})}">Назад</a>
+</button>
 <table>
+    <caption th:text="${doctor.fullName} +' - '+ |${doctor.doctorSpecialty.getRussianName()}|"></caption>
     <thead>
     <tr>
         <th th:each="day: ${currentWeek}" th:text="${#temporals.format(day, 'EEEE')}"></th>
