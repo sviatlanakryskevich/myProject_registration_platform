@@ -7,15 +7,19 @@
 </head>
 <body>
 <div th:replace="fragments/logout::logout"></div>
-Наши врачи:
-<form method="post" th:action="@{/main}">
-    <div >
-        <ul>
-            <li th:each="specialty: ${specialties}">
-                <a th:href="@{/get/{specialty} (specialty=${specialty.name()})}">[[${specialty.getRussianName()}]]</a></li>
-        </ul>
-    </div>
-</form>
+<button><a th:href="@{/updateUser}">Редактировать мои данные</a></button>
+<button><a th:href="@{/getOrders}">Мои заказы</a></button>
+<div>
+    <h2>Наши врачи:</h2>
+    <form method="post" th:action="@{/main}">
+        <div >
+            <ul>
+                <li th:each="specialty: ${specialties}">
+                    <a th:href="@{/get/{specialty} (specialty=${specialty.name()})}">[[${specialty.getRussianName()}]]</a></li>
+            </ul>
+        </div>
+    </form>
+</div>
 
 </body>
 </html>

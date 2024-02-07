@@ -3,12 +3,14 @@ package com.tms.skv.registration_platform.entity;
 import com.tms.skv.registration_platform.domain.Sex;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -30,11 +32,13 @@ public class UserEntity implements UserDetails {
     private Sex sex;
     @Column(length = 1024)
     private String address;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Temporal(TemporalType.DATE)
     private LocalDate birthday;
     private String phoneNumber;
     private String email;
 
-    @OneToMany(mappedBy = "client")
+    @OneToMany(mappedBy = "client", fetch = FetchType.EAGER)
     @ToString.Exclude
     private List<OrderEntity> orders;
 

@@ -6,6 +6,7 @@ import com.tms.skv.registration_platform.entity.OrderEntity;
 import com.tms.skv.registration_platform.repository.OrderRepository;
 import com.tms.skv.registration_platform.service.OrderEntityService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -29,5 +30,12 @@ public class OrderEntityServiceImpl implements OrderEntityService {
                 .build();
         OrderEntity save = orderRepository.save(order);
         return save;
+    }
+
+    @Override
+    public List<OrderEntity> getOrdersByUser(){
+        UserEntity user = (UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<OrderEntity> orders = user.getOrders();
+        return orders;
     }
 }

@@ -2,7 +2,7 @@ package com.tms.skv.registration_platform.web;
 
 import com.tms.skv.registration_platform.domain.Sex;
 import com.tms.skv.registration_platform.model.UserDto;
-import com.tms.skv.registration_platform.service.impl.DBUserDetailsService;
+import com.tms.skv.registration_platform.service.UserEntityService;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -15,8 +15,8 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 @Controller
 @RequestMapping
-public class SecurityController {
-    private final DBUserDetailsService userService;
+public class UserController {
+    private final UserEntityService userEntityService;
     @GetMapping("/public")
     public ModelAndView publicPage(UserDto userDto){
         ModelAndView modelAndView = new ModelAndView("public");
@@ -31,15 +31,24 @@ public class SecurityController {
 
     @PostMapping("/register")
     public ModelAndView save(@Valid UserDto userDto, BindingResult result){
-        ModelAndView modelAndView = new ModelAndView("public");
-        modelAndView.addObject("sexes", Sex.values());
-        ModelAndView modelAndView1 = new ModelAndView("register");
-        modelAndView1.addObject("sexes", Sex.values());
         if(!result.hasFieldErrors()){
-            userService.save(userDto);
-            return modelAndView;
+            if(userDto.getId() !=null){
+                userEntityService.update(userDto);
+                String success = "Редактирование сохранено.";
+                ModelAndView modelAndView = new ModelAndView("register");
+                modelAndView.addObject("sexes", Sex.values());
+                modelAndView.addObject("message", success);
+                return modelAndView;
+            }else{
+                userEntityService.save(userDto);
+                ModelAndView modelAndView = new ModelAndView("public");
+                modelAndView.addObject("sexes", Sex.values());
+                return modelAndView;
+            }
         }else {
-            return modelAndView1;
+            ModelAndView modelAndView = new ModelAndView("register");
+            modelAndView.addObject("sexes", Sex.values());
+            return modelAndView;
         }
     }
 

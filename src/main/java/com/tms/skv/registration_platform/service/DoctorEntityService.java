@@ -3,9 +3,7 @@ package com.tms.skv.registration_platform.service;
 import com.tms.skv.registration_platform.domain.DoctorSpecialty;
 import com.tms.skv.registration_platform.entity.DoctorEntity;
 import com.tms.skv.registration_platform.model.DoctorDto;
-
 import java.util.List;
-import java.util.Optional;
 
 public interface DoctorEntityService {
     List<DoctorEntity> findAll();

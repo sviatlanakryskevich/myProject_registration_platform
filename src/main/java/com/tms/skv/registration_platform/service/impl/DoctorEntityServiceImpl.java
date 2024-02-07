@@ -63,6 +63,7 @@ public class DoctorEntityServiceImpl implements DoctorEntityService {
     }
 
     @Override
+    @Transactional
     public void delete(Integer id)  {
         Optional<DoctorEntity> doctorOpt = doctorRepository.findById(id);
         if(doctorOpt.isPresent()){

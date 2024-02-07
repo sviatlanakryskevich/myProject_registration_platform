@@ -23,7 +23,8 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(cust -> {
             cust.requestMatchers("/public", "/register", "/login").permitAll()
-                    .requestMatchers("/main", "/get/**", "/schedule/**", "/createOrder", "/logout").authenticated()
+                    .requestMatchers("/main", "/get/**", "/schedule/**", "/createOrder",
+                            "/logout", "/updateUser", "/getOrders").authenticated()
                     .requestMatchers("/admin", "/createDoctor", "/deleteDoctor", "/updateDoctor").hasRole("ADMIN");
         });
         http.formLogin(cust -> {

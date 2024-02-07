@@ -9,11 +9,13 @@ import lombok.NoArgsConstructor;
 
 
 import java.time.LocalDate;
+import java.util.Date;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDto {
+    private Integer id;
     @NotBlank(message = "Обязательное поле")
     @Size(min = 6, max = 12, message = "Поле должно содержать от 6 до 12 символов")
     private String username;

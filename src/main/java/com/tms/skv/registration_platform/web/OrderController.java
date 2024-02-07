@@ -2,9 +2,12 @@ package com.tms.skv.registration_platform.web;
 
 import com.tms.skv.registration_platform.domain.DoctorSpecialty;
 import com.tms.skv.registration_platform.domain.Record;
+import com.tms.skv.registration_platform.domain.Sex;
 import com.tms.skv.registration_platform.entity.UserEntity;
 import com.tms.skv.registration_platform.entity.DoctorEntity;
 import com.tms.skv.registration_platform.entity.OrderEntity;
+import com.tms.skv.registration_platform.mapper.UserMapper;
+import com.tms.skv.registration_platform.model.UserDto;
 import com.tms.skv.registration_platform.service.impl.DoctorEntityServiceImpl;
 import com.tms.skv.registration_platform.service.impl.OrderEntityServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -24,9 +27,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Controller
 @RequestMapping
-public class AppointmentController {
+public class OrderController {
     private final DoctorEntityServiceImpl doctorEntityService;
     private final OrderEntityServiceImpl orderEntityService;
+    private final UserMapper userMapper;
     
     @GetMapping("/main")
     public ModelAndView mainPage() {
@@ -106,10 +110,28 @@ public class AppointmentController {
     public ModelAndView createOrder(@RequestParam(value = "doctorId") Integer doctorId,
                                     @RequestParam(value = "appointment") LocalDateTime appointment){
         DoctorEntity doctor = doctorEntityService.findById(doctorId);
-        UserEntity client = (UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        OrderEntity savedOrder = orderEntityService.createOrder(doctor, client, appointment);
+        UserEntity user = (UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        OrderEntity savedOrder = orderEntityService.createOrder(doctor, user, appointment);
         ModelAndView modelAndView = new ModelAndView("order");
         modelAndView.addObject("savedOrder", savedOrder);
+        return modelAndView;
+    }
+
+    @GetMapping("/getOrders")
+    public ModelAndView getOrders(){
+        List<OrderEntity> ordersByUser = orderEntityService.getOrdersByUser();
+        ModelAndView modelAndView = new ModelAndView("myOrders");
+        modelAndView.addObject("orders", ordersByUser);
+        return modelAndView;
+    }
+
+    @GetMapping("/updateUser")
+    public ModelAndView updateFormPage() {
+        UserEntity user = (UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDto dto = userMapper.toDto(user);
+        ModelAndView modelAndView = new ModelAndView("register");
+        modelAndView.addObject("sexes", Sex.values());
+        modelAndView.addObject("userDto", dto);
         return modelAndView;
     }
 }
