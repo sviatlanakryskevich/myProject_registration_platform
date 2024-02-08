@@ -1,5 +1,6 @@
 package com.tms.skv.registration_platform.service.impl;
 
+import com.tms.skv.registration_platform.exc.NotFoundException;
 import com.tms.skv.registration_platform.mapper.UserMapper;
 import com.tms.skv.registration_platform.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByLogin(username)
-                .orElse(null);
+                .orElseThrow(() -> new NotFoundException("Пользователь с таким логином не найден"));
     }
 
 }

@@ -9,6 +9,8 @@ import java.util.List;
 public interface OrderEntityService {
     List<OrderEntity> getDoctorOrdersByTime(LocalDateTime from,LocalDateTime to, Integer doctorId);
     OrderEntity createOrder(DoctorEntity doctor, UserEntity client, LocalDateTime appointmentTime);
-    List<OrderEntity> getOrdersByUser();
+    List<OrderEntity> getOrdersByUser(Integer userId);
+
+    void deleteOrder(Integer orderId);
 
 }

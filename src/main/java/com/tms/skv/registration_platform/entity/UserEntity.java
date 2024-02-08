@@ -38,7 +38,7 @@ public class UserEntity implements UserDetails {
     private String phoneNumber;
     private String email;
 
-    @OneToMany(mappedBy = "client", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     @ToString.Exclude
     private List<OrderEntity> orders;
 

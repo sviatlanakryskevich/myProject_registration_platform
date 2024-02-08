@@ -21,7 +21,7 @@ public class OrderEntity {
     @ManyToOne
     @JoinColumn(name="user_id", nullable=false)
     @ToString.Exclude
-    private UserEntity client;
+    private UserEntity user;
 
     @ManyToOne
     @JoinColumn(name="doctor_id", nullable=false)

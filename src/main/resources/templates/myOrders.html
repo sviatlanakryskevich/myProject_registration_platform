@@ -7,12 +7,18 @@
 </head>
 <body>
 <div th:replace="fragments/logout::logout"></div>
+<button>
+    <a th:href="@{/main}">На главную</a>
+</button>
 <div th:switch="${#lists.size(orders)}">
     <div th:case="'0'">У вас нет заказанных талонов</div>
     <div th:case="*">
         <div th:each="order: ${orders}">
             <div th:text="'Вы записаны к '+ ${order.getDoctor().getFullName()} + ' на '
     + |${#temporals.format(order.getAppointmentTime(), 'dd.MM.yyyy HH:mm')}|"></div>
+            <button>
+                <a th:href="@{/deleteOrder(id = ${order.getId()})}">Удалить заказ</a>
+            </button>
         </div>
     </div>
 </div>

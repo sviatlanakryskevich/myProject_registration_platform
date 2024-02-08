@@ -1,5 +1,6 @@
 package com.tms.skv.registration_platform.service.impl;
 
+import com.tms.skv.registration_platform.entity.OrderEntity;
 import com.tms.skv.registration_platform.entity.UserEntity;
 import com.tms.skv.registration_platform.exc.NotFoundException;
 import com.tms.skv.registration_platform.mapper.UserMapper;
@@ -11,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -43,12 +45,16 @@ public class UserEntityServiceImpl implements UserEntityService {
         Integer id = user.getId();
         Optional<UserEntity> userOpt = userRepository.findById(id);
         if(userOpt.isPresent()){
-            UserEntity entity = mapper.toEntity(user);
-            entity.setPassword(encoder.encode(user.getPassword()));
-            entity.setPerm("ROLE_USER");
-            userRepository.save(entity);
+            UserEntity oldUser = userOpt.get();
+            UserEntity newUser = mapper.toEntity(user);
+            newUser.setLogin(oldUser.getLogin());
+            newUser.setPassword(oldUser.getPassword());
+            newUser.setPerm("ROLE_USER");
+            userRepository.save(newUser);
         }else {
             throw new NotFoundException("Doctor with this id not found");
         }
     }
+
+
 }

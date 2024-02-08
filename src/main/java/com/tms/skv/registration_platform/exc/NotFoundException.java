@@ -4,8 +4,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class NotFoundException extends RuntimeException{
-    private String errorMessage;
+    public NotFoundException(String message) {
+        super(message);
+    }
 }

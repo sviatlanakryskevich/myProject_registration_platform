@@ -9,4 +9,5 @@ import java.util.List;
 
 public interface OrderRepository extends JpaRepository<OrderEntity, Integer>{
     List<OrderEntity> findByAppointmentTimeAfterAndAppointmentTimeBeforeAndAndDoctor_Id(LocalDateTime from, LocalDateTime to, Integer doctorId);
+    List<OrderEntity> findByUser_Id(Integer userId);
 }

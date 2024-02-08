@@ -10,6 +10,9 @@
 <button>
     <a th:href="@{/get/{specialty} (specialty=${doctor.doctorSpecialty})}">Назад</a>
 </button>
+<button>
+    <a th:href="@{/main}">На главную</a>
+</button>
 <table>
     <caption th:text="${doctor.fullName} +' - '+ |${doctor.doctorSpecialty.getRussianName()}|"></caption>
     <thead>

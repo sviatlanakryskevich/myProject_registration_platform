@@ -1,16 +1,20 @@
 package com.tms.skv.registration_platform.web;
 
 import com.tms.skv.registration_platform.domain.Sex;
+import com.tms.skv.registration_platform.entity.OrderEntity;
+import com.tms.skv.registration_platform.entity.UserEntity;
 import com.tms.skv.registration_platform.model.UserDto;
 import com.tms.skv.registration_platform.service.UserEntityService;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Controller
@@ -58,4 +62,6 @@ public class UserController {
         modelAndView.addObject("sexes", Sex.values());
         return modelAndView;
     }
+
+
 }

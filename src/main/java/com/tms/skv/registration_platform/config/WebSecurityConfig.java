@@ -24,7 +24,7 @@ public class WebSecurityConfig {
         http.authorizeHttpRequests(cust -> {
             cust.requestMatchers("/public", "/register", "/login").permitAll()
                     .requestMatchers("/main", "/get/**", "/schedule/**", "/createOrder",
-                            "/logout", "/updateUser", "/getOrders").authenticated()
+                            "/logout", "/updateUser", "/getOrders", "/deleteOrder").authenticated()
                     .requestMatchers("/admin", "/createDoctor", "/deleteDoctor", "/updateDoctor").hasRole("ADMIN");
         });
         http.formLogin(cust -> {

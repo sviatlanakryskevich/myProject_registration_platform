@@ -117,14 +117,6 @@ public class OrderController {
         return modelAndView;
     }
 
-    @GetMapping("/getOrders")
-    public ModelAndView getOrders(){
-        List<OrderEntity> ordersByUser = orderEntityService.getOrdersByUser();
-        ModelAndView modelAndView = new ModelAndView("myOrders");
-        modelAndView.addObject("orders", ordersByUser);
-        return modelAndView;
-    }
-
     @GetMapping("/updateUser")
     public ModelAndView updateFormPage() {
         UserEntity user = (UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -132,6 +124,27 @@ public class OrderController {
         ModelAndView modelAndView = new ModelAndView("register");
         modelAndView.addObject("sexes", Sex.values());
         modelAndView.addObject("userDto", dto);
+        return modelAndView;
+    }
+
+    @GetMapping("/getOrders")
+    public ModelAndView getOrders(){
+        UserEntity user = (UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Integer id = user.getId();
+        List<OrderEntity> ordersByUser = orderEntityService.getOrdersByUser(id);
+        ModelAndView modelAndView = new ModelAndView("myOrders");
+        modelAndView.addObject("orders", ordersByUser);
+        return modelAndView;
+    }
+
+    @GetMapping("/deleteOrder")
+    public ModelAndView deleteOrder(@RequestParam(value = "id") Integer orderId){
+        ModelAndView modelAndView = new ModelAndView("myOrders");
+        orderEntityService.deleteOrder(orderId);
+        UserEntity user = (UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Integer id = user.getId();
+        List<OrderEntity> ordersByUser = orderEntityService.getOrdersByUser(id);
+        modelAndView.addObject("orders", ordersByUser);
         return modelAndView;
     }
 }
