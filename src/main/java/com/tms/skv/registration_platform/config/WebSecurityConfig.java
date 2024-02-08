@@ -22,7 +22,7 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(cust -> {
-            cust.requestMatchers("/public", "/register", "/login").permitAll()
+            cust.requestMatchers("/public", "/register", "/login", "/error").permitAll()
                     .requestMatchers("/main", "/get/**", "/schedule/**", "/createOrder",
                             "/logout", "/updateUser", "/getOrders", "/deleteOrder").authenticated()
                     .requestMatchers("/admin", "/createDoctor", "/deleteDoctor", "/updateDoctor").hasRole("ADMIN");

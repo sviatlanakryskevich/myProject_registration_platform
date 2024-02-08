@@ -8,8 +8,9 @@
 <body>
 
 Форма входа
-<form method="post" th:action="@{/login}">
+<form method="post" th:action="@{/login}" >
   <input type="text" name="login"><br>
+  <span th:if="${error}"  th:text="${error}">Error</span>
   <input type="password" name="cred"><br>
   <input type="submit" th:value="Login">
 </form>

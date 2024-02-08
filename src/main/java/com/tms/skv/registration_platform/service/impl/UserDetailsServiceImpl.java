@@ -13,13 +13,12 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
-    private final PasswordEncoder encoder;
     private final UserRepository userRepository;
-    private final UserMapper mapper;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByLogin(username)
-                .orElseThrow(() -> new NotFoundException("Пользователь с таким логином не найден"));
+                .orElseThrow(() -> new NotFoundException("Пользователь c логином " +username+ " не найден"));
+               /* .orElseThrow(() -> new UsernameNotFoundException("Пользователь c логином" +username+ " не найден"));*/
     }
 
 }
