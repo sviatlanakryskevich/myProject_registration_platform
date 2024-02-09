@@ -2,6 +2,7 @@ package com.tms.skv.registration_platform.web;
 
 import com.tms.skv.registration_platform.domain.Sex;
 import com.tms.skv.registration_platform.entity.UserEntity;
+import com.tms.skv.registration_platform.exc.NotUniqueUserNameException;
 import com.tms.skv.registration_platform.mapper.UserMapper;
 import com.tms.skv.registration_platform.model.DoctorDto;
 import com.tms.skv.registration_platform.model.UserDto;
@@ -10,6 +11,7 @@ import com.tms.skv.registration_platform.service.UserEntityService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.NonUniqueResultException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
@@ -43,17 +45,20 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ModelAndView save(@Valid UserDto userDto, BindingResult result){
-        if(!result.hasFieldErrors()){
+    public ModelAndView save(@Valid UserDto userDto, BindingResult result) {
+        if (!result.hasFieldErrors()) {
             userEntityService.save(userDto);
             ModelAndView modelAndView = new ModelAndView("login");
             return modelAndView;
-        }else {
+
+        } else {
             ModelAndView modelAndView = new ModelAndView("register");
             modelAndView.addObject("sexes", Sex.values());
             return modelAndView;
         }
     }
+
+
 
     @GetMapping("/register")
     public ModelAndView registerPage(){
