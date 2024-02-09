@@ -4,6 +4,7 @@ import com.tms.skv.registration_platform.entity.DoctorEntity;
 import com.tms.skv.registration_platform.entity.UserEntity;
 import com.tms.skv.registration_platform.model.DoctorDto;
 import com.tms.skv.registration_platform.model.UserDto;
+import com.tms.skv.registration_platform.model.UserUpdateDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -15,4 +16,11 @@ public interface UserMapper {
 
     @Mapping(target = "username", source = "login")
     UserDto toDto(UserEntity entity);
+
+    @Mapping(target = "login", source = "username")
+    UserEntity toUpdateEntity(UserUpdateDto dto);
+
+
+    @Mapping(target = "username", source = "login")
+    UserUpdateDto toUpdateDto(UserEntity entity);
 }

@@ -5,6 +5,7 @@ import com.tms.skv.registration_platform.entity.UserEntity;
 import com.tms.skv.registration_platform.exc.NotFoundException;
 import com.tms.skv.registration_platform.mapper.UserMapper;
 import com.tms.skv.registration_platform.model.UserDto;
+import com.tms.skv.registration_platform.model.UserUpdateDto;
 import com.tms.skv.registration_platform.repository.UserRepository;
 import com.tms.skv.registration_platform.service.UserEntityService;
 import lombok.RequiredArgsConstructor;
@@ -41,12 +42,12 @@ public class UserEntityServiceImpl implements UserEntityService {
 
     @Override
     @Transactional
-    public void update(UserDto user) {
+    public void update(UserUpdateDto user) {
         Integer id = user.getId();
         Optional<UserEntity> userOpt = userRepository.findById(id);
         if(userOpt.isPresent()){
             UserEntity oldUser = userOpt.get();
-            UserEntity newUser = mapper.toEntity(user);
+            UserEntity newUser = mapper.toUpdateEntity(user);
             newUser.setLogin(oldUser.getLogin());
             newUser.setPassword(oldUser.getPassword());
             newUser.setPerm("ROLE_USER");

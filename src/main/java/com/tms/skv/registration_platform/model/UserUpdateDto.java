@@ -6,18 +6,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
-import java.time.LocalDate;
 
+import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDto {
+public class UserUpdateDto {
     private Integer id;
-    @NotBlank(message = "Обязательное поле")
-    @Size(min = 6, max = 12, message = "Поле должно содержать от 6 до 12 символов")
     private String username;
-    @NotBlank(message = "Обязательное поле")
-    @Size(min = 6, max = 12, message = "Поле должно содержать от 6 до 12 символов")
     private String password;
     @NotBlank(message = "Обязательное поле")
     @Size(min = 2, max = 12, message = "Поле должно содержать от 2 до 12 символов")

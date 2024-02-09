@@ -1,5 +1,6 @@
 package com.tms.skv.registration_platform.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -19,19 +20,21 @@ import java.util.List;
 
 @Configuration
 public class WebSecurityConfig {
+    @Autowired
+    CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(cust -> {
-            cust.requestMatchers("/public", "/register", "/login", "/error").permitAll()
+            cust.requestMatchers("/register", "/login", "/error").permitAll()
                     .requestMatchers("/main", "/get/**", "/schedule/**", "/createOrder",
                             "/logout", "/updateUser", "/getOrders", "/deleteOrder").authenticated()
                     .requestMatchers("/admin", "/createDoctor", "/deleteDoctor", "/updateDoctor").hasRole("ADMIN");
         });
         http.formLogin(cust -> {
-            cust.loginPage("/public");
+            cust.loginPage("/login");
             cust.loginProcessingUrl("/login");
-            cust.usernameParameter("login");
-            cust.passwordParameter("cred");
+            cust.usernameParameter("username");
+            cust.passwordParameter("password");
             cust.successHandler(((request, response, authentication) -> {
                 var authorities = authentication.getAuthorities();
                 List<String> stringAuthorities = authorities.stream().map(GrantedAuthority::getAuthority).toList();
@@ -41,13 +44,14 @@ public class WebSecurityConfig {
                     response.sendRedirect("/main");
                 }
             }));
-            cust.failureHandler(((request, response, exception) -> {
+            cust.failureHandler(customAuthenticationFailureHandler);
+            /*cust.failureHandler(((request, response, exception) -> {
                 response.sendRedirect("/public");
-            }));
+            }));*/
         });
         http.logout(cust -> {
             cust.logoutUrl("/logout");
-            cust.logoutSuccessUrl("/public");
+            cust.logoutSuccessUrl("/login");
             cust.invalidateHttpSession(true);
 
         });

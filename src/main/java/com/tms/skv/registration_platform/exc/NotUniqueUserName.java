@@ -5,8 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class NotUniqueUserName extends RuntimeException {
-    private String errorMessage;
+    public NotUniqueUserName(String message) {
+        super(message);
+    }
 }

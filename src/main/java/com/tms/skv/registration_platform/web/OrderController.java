@@ -30,7 +30,6 @@ import java.util.stream.Collectors;
 public class OrderController {
     private final DoctorEntityServiceImpl doctorEntityService;
     private final OrderEntityServiceImpl orderEntityService;
-    private final UserMapper userMapper;
     
     @GetMapping("/main")
     public ModelAndView mainPage() {
@@ -114,16 +113,6 @@ public class OrderController {
         OrderEntity savedOrder = orderEntityService.createOrder(doctor, user, appointment);
         ModelAndView modelAndView = new ModelAndView("order");
         modelAndView.addObject("savedOrder", savedOrder);
-        return modelAndView;
-    }
-
-    @GetMapping("/updateUser")
-    public ModelAndView updateFormPage() {
-        UserEntity user = (UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserDto dto = userMapper.toDto(user);
-        ModelAndView modelAndView = new ModelAndView("register");
-        modelAndView.addObject("sexes", Sex.values());
-        modelAndView.addObject("userDto", dto);
         return modelAndView;
     }
 
