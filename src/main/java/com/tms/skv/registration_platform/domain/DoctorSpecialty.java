@@ -11,7 +11,7 @@ public enum DoctorSpecialty {
     NEUROLOGIST("Невролог"),
     GYNECOLOGIST("Гинеколог"),
     UROLOGIST("Уролог"),
-    PEDIATRIST("Педиатр"),
+    PEDIATRICIAN("Педиатр"),
     ONCOLOGIST("Онколог");
 
 

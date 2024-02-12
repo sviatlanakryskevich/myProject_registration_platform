@@ -1,0 +1,30 @@
+*{
+    box-sizing: border-box;
+}
+a.main{
+    text-decoration: none;
+    color: white;
+}
+a.main:hover {
+    color: white;
+}
+.basic {
+    text-align: center;
+    font-size: 45px;
+    font-weight: 300;
+}
+.error {
+    color: red;
+}
+.bg-opacity-10 {
+    background: url('bg.jpg') no-repeat center/cover;
+}
+.login {
+    width: 300px;
+    margin: 0 auto;
+    padding-top: 100px;
+}
+.container {
+    min-height: 100vh;
+    height: 100%;
+}

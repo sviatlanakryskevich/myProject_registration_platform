@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 public class DoctorDto {
     private Integer id;
     @NotBlank(message = "Обязательное поле")
-    @Size(min = 6, max = 12, message = "Поле должно содержать от 6 до 12 символов")
+    @Size(min = 6, message = "Поле должно содержать минимально 6 символов")
     private String fullName;
     @NotNull(message = "Обязательное поле")
     private DoctorSpecialty doctorSpecialty;

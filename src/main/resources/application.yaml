@@ -5,7 +5,7 @@ spring:
     password: nikolaeva0628
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     generate-ddl: true
 server:
   port: 8081

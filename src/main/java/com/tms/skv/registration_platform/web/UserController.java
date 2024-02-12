@@ -71,7 +71,9 @@ public class UserController {
     @GetMapping("/updateUser")
     public ModelAndView updateFormPage() {
         UserEntity user = (UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserUpdateDto updateDto = userMapper.toUpdateDto(user);
+        Integer id = user.getId();
+        UserEntity byId = userEntityService.getById(id);
+        UserUpdateDto updateDto = userMapper.toUpdateDto(byId);
         ModelAndView modelAndView = new ModelAndView("updateUser");
         modelAndView.addObject("sexes", Sex.values());
         modelAndView.addObject("userUpdateDto", updateDto);

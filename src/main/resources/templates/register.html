@@ -3,52 +3,60 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Register</title>
+    <link th:href="@{/css/main.css}" href="../static/css/main.css" rel="stylesheet" type="text/css"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
 <body>
+<div class="bg bg-opacity-10">
+    <div class="container ">
+        <div class="login" style="width: 500px; padding: 50px 0 80px 0;">
+            <p class="error" th:if="${errorMessage}" th:text="${errorMessage}"></p>
+            <form method="post" th:action="@{/register}" th:object="${userDto}">
+                <fieldset>
+                    <legend class="basic">Форма регистрации</legend>
+                    <label class="form-label" for="username">Логин:</label>
+                    <input class="form-control" type="text" id="username" name="username" th:field="*{username}">
+                    <p class="error" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Incorrect date</p><br>
+                    <label class="form-label" for="password">Пароль:</label>
+                    <input class="form-control" type="password" id="password" name="password" th:field="*{password}">
+                    <p class="error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Incorrect date</p><br>
 
-<p th:if="${errorMessage}" th:text="${errorMessage}" style="color: red;"></p>
-<form method="post" th:action="@{/register}" th:object="${userDto}">
-    <fieldset>
-        <legend>Форма регистрации:</legend>
-            <label for="username">Логин:</label>
-            <input type="text" id="username" name="username" th:field="*{username}">
-            <p th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Incorrect date</p><br>
-            <label for="password">Пароль:</label>
-            <input type="password" id="password" name="password" th:field="*{password}">
-            <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Incorrect date</p><br>
-
-        <label for="firstName">Имя:</label>
-        <input type="text" id="firstName" name="firstName" th:field="*{firstName}">
-        <p th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">Incorrect date</p><br>
-        <label for="lastName">Фамилия:</label>
-        <input type="text" id="lastName" name="lastName" th:field="*{lastName}">
-        <p th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">Incorrect date</p><br>
-        <label for="sex">Пол:</label>
-        <div th:each="sex: ${sexes}" id="sex">
-            <input th:type="radio"  th:text="${sex.getRussianName()}" th:value="${sex.name()}" th:name="sex"
-                   th:field="*{sex}">
-            <p th:if="${#fields.hasErrors('sex')}" th:errors="*{sex}">Incorrect date</p><br>
+                    <label class="form-label" for="firstName">Имя:</label>
+                    <input class="form-control" type="text" id="firstName" name="firstName" th:field="*{firstName}">
+                    <p class="error" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">Incorrect date</p><br>
+                    <label class="form-label" for="lastName">Фамилия:</label>
+                    <input class="form-control" type="text" id="lastName" name="lastName" th:field="*{lastName}">
+                    <p class="error" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">Incorrect date</p><br>
+                    <label class="form-label" for="sex">Пол:</label>
+                    <div th:each="sex: ${sexes}" id="sex">
+                        <input class="form-check-input" th:type="radio"  th:text="${sex.getRussianName()}" th:value="${sex.name()}" th:name="sex"
+                               th:field="*{sex}"></div>
+                    <p class="error" th:if="${#fields.hasErrors('sex')}" th:errors="*{sex}">Incorrect date</p><br>
+                    <label class="form-label" for="address">Адрес:</label>
+                    <input class="form-control" type="text" id="address" name="address" th:field="*{address}">
+                    <p class="error" th:if="${#fields.hasErrors('address')}" th:errors="*{address}">Incorrect date</p><br>
+                    <label class="form-label" for="birthday">Дата рождения:</label>
+                    <input class="form-control" type="date" id="birthday" name="birthday" th:field="*{birthday}">
+                    <p class="error" th:if="${#fields.hasErrors('birthday')}" th:errors="*{birthday}">Incorrect date</p><br>
+                    <label class="form-label" for="phoneNumber">Номер телефона:</label>
+                    <input class="form-control" type="text" id="phoneNumber" name="phoneNumber" th:field="*{phoneNumber}">
+                    <p class="error" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}">Incorrect date</p><br>
+                    <label class="form-label" for="email">Адрес электронной почты:</label>
+                    <input class="form-control" type="email" id="email" name="email" th:field="*{email}">
+                    <p class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Incorrect date</p><br>
+                    <input class="btn btn-primary" type="submit" value="Отправить">
+                    <button class="btn btn-primary">
+                        <a class="main" th:href="@{/login}">Вернуться назад</a>
+                    </button>
+                </fieldset>
+            </form>
         </div>
-        <label for="address">Адрес:</label>
-        <input type="text" id="address" name="address" th:field="*{address}">
-        <p th:if="${#fields.hasErrors('address')}" th:errors="*{address}">Incorrect date</p><br>
-        <label for="birthday">Дата рождения:</label>
-        <input type="date" id="birthday" name="birthday" th:field="*{birthday}">
-        <p th:if="${#fields.hasErrors('birthday')}" th:errors="*{birthday}">Incorrect date</p><br>
-        <label for="phoneNumber">Номер телефона:</label>
-        <input type="text" id="phoneNumber" name="phoneNumber" th:field="*{phoneNumber}">
-        <p th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}">Incorrect date</p><br>
-        <label for="email">Адрес электронной почты:</label>
-        <input type="email" id="email" name="email" th:field="*{email}">
-        <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Incorrect date</p><br>
-        <input type="submit" value="Отправить">
-    </fieldset>
-    <p th:text="${message}"></p>
-</form>
+    </div>
+</div>
 
-<button>
-    <a th:href="@{/login}">Назад</a>
-</button>
+
+
 </body>
 </html>

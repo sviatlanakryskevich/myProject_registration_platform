@@ -23,6 +23,17 @@ public class UserEntityServiceImpl implements UserEntityService {
     private final UserRepository userRepository;
     private final UserMapper mapper;
 
+    @Override
+    public UserEntity getById(Integer id) {
+        Optional<UserEntity> byId = userRepository.findById(id);
+        if(byId.isPresent()){
+            UserEntity user = byId.get();
+            return user;
+        } else {
+            throw new NotFoundException("User with this id not found");
+        }
+    }
+
     @Transactional
     @Override
     public void save(UserDto user) {
@@ -58,7 +69,7 @@ public class UserEntityServiceImpl implements UserEntityService {
             newUser.setPerm("ROLE_USER");
             userRepository.save(newUser);
         } else {
-            throw new NotFoundException("Doctor with this id not found");
+            throw new NotFoundException("User with this id not found");
         }
     }
 
