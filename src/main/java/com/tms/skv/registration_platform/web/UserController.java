@@ -86,7 +86,7 @@ public class UserController {
         modelAndView.addObject("sexes", Sex.values());
         if(!result.hasFieldErrors()){
                 userEntityService.update(userDto);
-                String success = "Редактирование сохранено.";
+                String success = "Редактирование сохранено";
                 modelAndView.addObject("message", success);
         }
         return modelAndView;

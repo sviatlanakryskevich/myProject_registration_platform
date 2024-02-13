@@ -30,9 +30,11 @@
                     <input class="form-control" type="text" id="lastName" name="lastName" th:field="*{lastName}">
                     <p class="error" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">Incorrect date</p><br>
                     <label class="form-label" for="sex">Пол:</label>
-                    <div th:each="sex: ${sexes}" id="sex">
-                        <input class="form-check-input" th:type="radio"  th:text="${sex.getRussianName()}" th:value="${sex.name()}" th:name="sex"
-                               th:field="*{sex}"></div>
+                    <div class="radio" id="sex">
+                        <div th:each="sex: ${sexes}" style="margin:10px 20px;" >
+                            <input class="form-check-input" th:type="radio"  th:text="${sex.getRussianName()}" th:value="${sex.name()}" th:name="sex"
+                                   th:field="*{sex}"></div>
+                    </div>
                     <p class="error" th:if="${#fields.hasErrors('sex')}" th:errors="*{sex}">Incorrect date</p><br>
                     <label class="form-label" for="address">Адрес:</label>
                     <input class="form-control" type="text" id="address" name="address" th:field="*{address}">
@@ -46,17 +48,12 @@
                     <label class="form-label" for="email">Адрес электронной почты:</label>
                     <input class="form-control" type="email" id="email" name="email" th:field="*{email}">
                     <p class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Incorrect date</p><br>
-                    <input class="btn btn-primary" type="submit" value="Отправить">
-                    <button class="btn btn-primary">
-                        <a class="main" th:href="@{/login}">Вернуться назад</a>
-                    </button>
+                    <input class="btn btn-primary" style="width: 200px; margin:10px 30px;" type="submit" value="Отправить">
+                    <a class="main btn btn-primary" style="width: 200px;" th:href="@{/login}">Вернуться назад</a>
                 </fieldset>
             </form>
         </div>
     </div>
 </div>
-
-
-
 </body>
 </html>
