@@ -11,17 +11,31 @@
 <body>
 <div class="bg bg-opacity-10">
     <div class="container ">
-        <div class="nav justify-content-end" style="padding: 30px;">
-            <a class="main btn btn-primary" style="margin-right: 20px; width: 120px;" th:href="@{/schedule/{id} (id=${savedOrder.getDoctor().getId()})}">Назад</a>
-            <a class="main btn btn-primary" style="margin-right: 20px; width: 120px;" th:href="@{/main}">На главную</a>
-            <div th:replace="fragments/logout::logout"></div>
-        </div>
-        <h2 class="basic">Ваша запись</h2>
-        <hr style="height: 3px; color: #6610f2;">
-        <div class="data" th:object="${savedOrder}">
-            <div th:text="'Вы записаны к '+ ${savedOrder.getDoctor().getFullName()} + ' на '
-    + |${#temporals.format(savedOrder.getAppointmentTime(), 'dd.MM.yyyy HH:mm')}|">
+        <div th:if="${savedOrder}">
+            <div class="nav justify-content-end" style="padding: 30px;">
+                <a class="main btn btn-primary" style="margin-right: 20px; width: 120px;"
+                   th:href="@{/schedule/{id} (id=${doctorId})}">Назад</a>
+                <a class="main btn btn-primary" style="margin-right: 20px; width: 120px;" th:href="@{/main}">На
+                    главную</a>
+                <div th:replace="fragments/logout::logout"></div>
             </div>
+            <h2 class="basic">Ваша запись</h2>
+            <hr style="height: 3px; color: #6610f2;">
+            <div class="data" th:object="${savedOrder}">
+                <div th:text="'Вы записаны к '+ ${savedOrder.getDoctor().getFullName()} + ' на '
+    + |${#temporals.format(savedOrder.getAppointmentTime(), 'dd.MM.yyyy HH:mm')}|">
+                </div>
+            </div>
+        </div>
+        <div th:if="${errorMsg}">
+            <div class="nav justify-content-end" style="padding: 30px;">
+                <a class="main btn btn-primary" style="margin-right: 20px; width: 120px;"
+                   th:href="@{/schedule/{id} (id=${doctorId})}">Назад</a>
+                <a class="main btn btn-primary" style="margin-right: 20px; width: 120px;" th:href="@{/main}">На
+                    главную</a>
+                <div th:replace="fragments/logout::logout"></div>
+            </div>
+            <p class="error" style="font-size: 30px;font-weight: 400;text-align: center;padding: 60px;" th:text="${errorMsg}"></p>
         </div>
     </div>
 </div>

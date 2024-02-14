@@ -21,6 +21,9 @@
             <div class="data" th:case="'0'">У вас нет заказанных талонов</div>
             <div th:case="*">
                 <div class="order" th:each="order: ${orders}">
+                    <div th:if="${order.getAppointmentTime().isBefore(today)}">
+                        <p style="color: red;font-style: italic;">Неактуальная запись</p>
+                    </div>
                     <div class="data" th:text="'Вы записаны к '+ ${order.getDoctor().getFullName()} + ' на '+ |${#temporals.format(order.getAppointmentTime(), 'dd.MM.yyyy HH:mm')}|"></div>
                     <a class="main btn btn-primary" style="width: 200px;" th:href="@{/deleteOrder(id = ${order.getId()})}">Удалить заказ</a>
                 </div>

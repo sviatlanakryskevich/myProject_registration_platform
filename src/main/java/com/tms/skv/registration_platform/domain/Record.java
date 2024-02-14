@@ -13,6 +13,6 @@ import java.time.LocalDateTime;
 @Builder
 public class Record {
     private LocalDateTime appointment;
-    private boolean isOrdered;
+    private boolean isUnavailable;
     private Integer doctorId;
 }

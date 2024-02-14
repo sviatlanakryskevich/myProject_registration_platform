@@ -25,7 +25,7 @@
                     </div>
                     <div>
                         <div>[[${doctor.fullName}]] - опыт:[[${doctor.experience}]] года/лет</div>
-                        <a class="main btn btn-primary" style="margin: 20px;" th:href="@{/schedule/{id} (id=${doctor.getId()})}">Записаться на прием</a>
+                        <a class="main btn btn-primary" style="margin: 20px;" th:href="@{/schedule/{id} (id=${doctor.getId()}, dateTime=${now})}">Записаться на прием</a>
                     </div>
                 </li>
             </ul>

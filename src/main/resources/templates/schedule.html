@@ -9,34 +9,43 @@
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
 <body>
-<div th:replace="fragments/logout::logout"></div>
-<button>
-    <a th:href="@{/get/{specialty} (specialty=${doctor.doctorSpecialty})}">Назад</a>
-</button>
-<button>
-    <a th:href="@{/main}">На главную</a>
-</button>
-<table>
-    <caption th:text="${doctor.fullName} +' - '+ |${doctor.doctorSpecialty.getRussianName()}|"></caption>
-    <thead>
-    <tr>
-        <th th:each="day: ${currentWeek}" th:text="${#temporals.format(day, 'EEEE')}"></th>
-    </tr>
-    <tr>
-        <th th:each="day: ${currentWeek}" th:text="${#temporals.format(day, 'dd-MM-yyyy')}"></th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="time: ${intervals.keySet()}">
-        <td th:each="record: ${intervals.get(time)}">
-            <!--TODO: check how to make it via body-->
-            <form method="post"
-                  th:action="@{/createOrder(doctorId = ${record.getDoctorId()}, appointment = ${record.getAppointment()})}">
-                <input type="submit" th:disabled="${record.isOrdered()}" th:value="${#temporals.format(time, 'HH:mm')}">
-            </form>
-        </td>
-    </tr>
-    </tbody>
-</table>
+<div class="bg bg-opacity-10">
+    <div class="container ">
+        <div class="nav justify-content-end" style="padding: 30px;">
+            <a class="main btn btn-primary" style="margin-right: 20px; width: 200px;" th:href="@{/get/{specialty} (specialty=${doctor.doctorSpecialty})}">Назад</a>
+            <a class="main btn btn-primary" style="margin-right: 20px; width: 200px;" th:href="@{/main}">На главную</a>
+            <div th:replace="fragments/logout::logout"></div>
+        </div>
+        <h2 class="basic">Расписание</h2>
+        <hr style="height: 3px; color: #6610f2;">
+        <div class="time">
+            <table class="schedule">
+                <caption style="text-align: center;font-size: 25px;font-weight: 600;color: blue;" th:text="${doctor.fullName} +' - '+ |${doctor.doctorSpecialty.getRussianName()}|"></caption>
+                <thead style="font-size: 17px;border: solid 1px green;">
+                <tr>
+                    <th th:each="day: ${currentWeek}" th:text="${#temporals.format(day, 'EEEE')}"></th>
+                </tr>
+                <tr>
+                    <th th:each="day: ${currentWeek}" th:text="${#temporals.format(day, 'dd-MM-yyyy')}"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="time: ${intervals.keySet()}">
+                    <td th:each="record: ${intervals.get(time)}">
+                        <form method="post" th:action="@{/createOrder(doctorId = ${record.getDoctorId()}, appointment = ${record.getAppointment()})}">
+                            <input class="main btn btn-primary" style="width: 180px;margin: 5px;" type="submit" th:disabled="${record.isUnavailable()}" th:value="${#temporals.format(time, 'HH:mm')}">
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <ul class="pagination">
+                <li class="page-item"><a class="page-link" th:href="@{/schedule/{id} (id=${doctor.getId()}, dateTime=${previous})}">Previous</a></li>
+                <li class="page-item"><a class="page-link" th:href="@{/schedule/{id} (id=${doctor.getId()}, dateTime=${next})}">Next</a></li>
+            </ul>
+        </div>
+
+    </div>
+</div>
 </body>
 </html>

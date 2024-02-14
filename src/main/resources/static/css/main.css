@@ -73,3 +73,13 @@ a.main:hover {
     display: flex;
     justify-content: center;
 }
+.schedule {
+    caption-side: top;
+    text-align: center;
+    width: 1000px;
+    margin: 0 auto;
+    padding-top: 50px;
+}
+.time {
+    padding: 30px 0 150px 0;
+}

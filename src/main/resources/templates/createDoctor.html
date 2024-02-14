@@ -9,30 +9,37 @@
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
 <body>
-<div th:replace="fragments/logout::logout"></div>
-<form action="/createDoctor" method="post" th:object="${doctorDto}">
-    <fieldset>
-        <legend th:hidden="(*{id} != null)">Создать нового доктора:</legend>
-        <legend th:hidden="(*{id} == null)">Редактирование доктора:</legend>
-
-        <input type="hidden" th:field="*{id}">
-        <label for="fullName">ФИО:</label>
-        <input type="text" id="fullName" name="fullName" th:field="*{fullName}">
-        <p th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"></p><br>
-        <label for="specialty">Специальность:</label>
-        <select id="specialty" th:field="*{doctorSpecialty}">
-            <option th:each="specialty: ${specialties}"
-                    th:value="${specialty.name()}"
-                    th:text="${specialty.getRussianName()}"></option>
-        </select>
-        <p th:if="${#fields.hasErrors('doctorSpecialty')}" th:errors="*{doctorSpecialty}"></p>
-        <br>
-        <label for="experience">Опыт:</label>
-        <input type="number" placeholder="Введите число" min="0" max="50" step="0.5" id="experience" name="experience"
-               th:field="*{experience}">
-        <p th:if="${#fields.hasErrors('experience')}" th:errors="*{experience}"></p><br>
-        <input type="submit" value="Сохранить">
-    </fieldset>
-</form>
+<div class="bg bg-opacity-10 admin">
+    <div class="container ">
+        <div class="login" style="width: 500px; padding: 50px 0 80px 0;">
+            <div class="nav justify-content-end" style="padding: 30px;">
+                <a class="main btn btn-primary" style="margin-right: 20px; width: 200px;" th:href="@{/admin}">Вернуться назад</a>
+                <div th:replace="fragments/logout::logout"></div>
+            </div>
+            <form action="/createDoctor" method="post" th:object="${doctorDto}">
+                <fieldset>
+                    <legend class="basic" th:hidden="(*{id} != null)">Создать нового доктора:</legend>
+                    <legend class="basic" th:hidden="(*{id} == null)">Редактирование доктора:</legend>
+                    <input type="hidden" th:field="*{id}">
+                    <label class="form-label" for="fullName">ФИО:</label>
+                    <input class="form-control" type="text" id="fullName" name="fullName" th:field="*{fullName}">
+                    <p class="error" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"></p><br>
+                    <label class="form-label" for="specialty">Специальность:</label>
+                    <select class="form-select" id="specialty" th:field="*{doctorSpecialty}">
+                        <option th:each="specialty: ${specialties}"
+                                th:value="${specialty.name()}"
+                                th:text="${specialty.getRussianName()}"></option>
+                    </select>
+                    <p class="error" th:if="${#fields.hasErrors('doctorSpecialty')}" th:errors="*{doctorSpecialty}"></p><br>
+                    <label class="form-label" for="experience">Опыт:</label>
+                    <input class="form-control" type="number" placeholder="Введите число" min="0" max="50" step="0.5" id="experience" name="experience"
+                           th:field="*{experience}">
+                    <p class="error" th:if="${#fields.hasErrors('experience')}" th:errors="*{experience}"></p><br>
+                    <input class="main btn btn-primary" type="submit" value="Сохранить">
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>
 </body>
 </html>

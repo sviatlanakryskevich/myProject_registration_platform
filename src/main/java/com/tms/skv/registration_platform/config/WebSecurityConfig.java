@@ -20,7 +20,7 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(cust -> {
-            cust.requestMatchers("/register", "/login", "/error", "**").permitAll()
+            cust.requestMatchers("/register", "/login", "/error", "/css/**").permitAll()
                     .requestMatchers("/main", "/get/**", "/schedule/**", "/createOrder",
                             "/logout", "/updateUser", "/getOrders", "/deleteOrder").authenticated()
                     .requestMatchers("/admin", "/createDoctor", "/deleteDoctor", "/updateDoctor").hasRole("ADMIN");

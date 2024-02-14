@@ -1,5 +1,7 @@
 package com.tms.skv.registration_platform.web;
 
+import com.tms.skv.registration_platform.domain.DoctorSpecialty;
+import com.tms.skv.registration_platform.exc.AppointmentIsExistException;
 import com.tms.skv.registration_platform.exc.NotFoundException;
 import com.tms.skv.registration_platform.exc.NotUniqueUserNameException;
 import com.tms.skv.registration_platform.model.UserDto;
