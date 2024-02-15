@@ -29,7 +29,7 @@ public class UserEntityServiceImpl implements UserEntityService {
         if(byId.isPresent()){
             return byId.get();
         } else {
-            throw new NotFoundException("User with this id not found");
+            throw new NotFoundException("Пользователь с таким id не найден");
         }
     }
 
@@ -68,7 +68,7 @@ public class UserEntityServiceImpl implements UserEntityService {
             newUser.setPerm("ROLE_USER");
             userRepository.save(newUser);
         } else {
-            throw new NotFoundException("User with this id not found");
+            throw new NotFoundException("Пользователь с таким id не найден");
         }
     }
 

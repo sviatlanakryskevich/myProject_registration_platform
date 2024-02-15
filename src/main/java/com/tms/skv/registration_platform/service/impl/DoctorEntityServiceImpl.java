@@ -30,7 +30,7 @@ public class DoctorEntityServiceImpl implements DoctorEntityService {
         if(doctorOpt.isPresent()){
             return doctorOpt.get();
         }else {
-            throw new NotFoundException("Doctor with this id not found");
+            throw new NotFoundException("Доктор с таким id не найден");
         }
     }
 
@@ -55,7 +55,7 @@ public class DoctorEntityServiceImpl implements DoctorEntityService {
             DoctorEntity doctorEntity = mapper.toEntity(doctorDto);
             doctorRepository.save(doctorEntity);
         }else {
-            throw new NotFoundException("Doctor with this id not found");
+            throw new NotFoundException("Доктор с таким id не найден");
         }
     }
 
@@ -67,7 +67,7 @@ public class DoctorEntityServiceImpl implements DoctorEntityService {
             DoctorEntity doctorEntity = doctorOpt.get();
             doctorRepository.delete(doctorEntity);
         }else {
-            throw new NotFoundException("Doctor with this id not found");
+            throw new NotFoundException("Доктор с таким id не найден");
         }
 
     }

@@ -10,9 +10,8 @@ import org.springframework.web.servlet.ModelAndView;
 public class ErrorController {
     @ExceptionHandler(NotFoundException.class)
     public ModelAndView handleNotFoundException(NotFoundException exc){
-        String errorMessage = exc.getMessage();
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("error",errorMessage);
+        ModelAndView modelAndView = new ModelAndView("error");
+        modelAndView.addObject("error",exc.getMessage());
         return modelAndView;
     }
 
