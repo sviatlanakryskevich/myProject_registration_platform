@@ -27,8 +27,7 @@ public class UserEntityServiceImpl implements UserEntityService {
     public UserEntity getById(Integer id) {
         Optional<UserEntity> byId = userRepository.findById(id);
         if(byId.isPresent()){
-            UserEntity user = byId.get();
-            return user;
+            return byId.get();
         } else {
             throw new NotFoundException("User with this id not found");
         }

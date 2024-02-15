@@ -14,7 +14,7 @@
         <div th:if="${savedOrder}">
             <div class="nav justify-content-end" style="padding: 30px;">
                 <a class="main btn btn-primary" style="margin-right: 20px; width: 120px;"
-                   th:href="@{/schedule/{id} (id=${doctorId})}">Назад</a>
+                   th:href="@{/schedule/{id} (id=${doctorId}, dateTime=${now})}">Назад</a>
                 <a class="main btn btn-primary" style="margin-right: 20px; width: 120px;" th:href="@{/main}">На
                     главную</a>
                 <div th:replace="fragments/logout::logout"></div>
@@ -22,7 +22,7 @@
             <h2 class="basic">Ваша запись</h2>
             <hr style="height: 3px; color: #6610f2;">
             <div class="data" th:object="${savedOrder}">
-                <div th:text="'Вы записаны к '+ ${savedOrder.getDoctor().getFullName()} + ' на '
+                <div th:text="${savedOrder.getDoctor().getDoctorSpecialty().getRussianName()} + ' - '+ |${savedOrder.getDoctor().getFullName()}| + ' на '
     + |${#temporals.format(savedOrder.getAppointmentTime(), 'dd.MM.yyyy HH:mm')}|">
                 </div>
             </div>
@@ -30,7 +30,7 @@
         <div th:if="${errorMsg}">
             <div class="nav justify-content-end" style="padding: 30px;">
                 <a class="main btn btn-primary" style="margin-right: 20px; width: 120px;"
-                   th:href="@{/schedule/{id} (id=${doctorId})}">Назад</a>
+                   th:href="@{/schedule/{id} (id=${doctorId}, dateTime=${now})}">Назад</a>
                 <a class="main btn btn-primary" style="margin-right: 20px; width: 120px;" th:href="@{/main}">На
                     главную</a>
                 <div th:replace="fragments/logout::logout"></div>

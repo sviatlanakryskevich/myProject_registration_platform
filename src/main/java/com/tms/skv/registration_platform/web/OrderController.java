@@ -13,14 +13,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.temporal.TemporalAdjusters;
 import java.util.*;
-import java.util.stream.Collectors;
+
 
 @RequiredArgsConstructor
 @Controller
@@ -75,6 +72,7 @@ public class OrderController {
         UserEntity user = (UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         ModelAndView modelAndView = new ModelAndView("order");
         modelAndView.addObject("doctorId", doctorId);
+        modelAndView.addObject("now", LocalDateTime.now());
         try {
             OrderEntity savedOrder = orderEntityService.createOrder(doctor, user, appointment);
             modelAndView.addObject("savedOrder", savedOrder);
@@ -90,6 +88,7 @@ public class OrderController {
         Integer id = user.getId();
         List<OrderEntity> ordersByUser = orderEntityService.getOrdersByUser(id);
         LocalDateTime today = LocalDateTime.now();
+
         ModelAndView modelAndView = new ModelAndView("myOrders");
         modelAndView.addObject("orders", ordersByUser);
         modelAndView.addObject("today", today);
@@ -104,6 +103,7 @@ public class OrderController {
         Integer id = user.getId();
         List<OrderEntity> ordersByUser = orderEntityService.getOrdersByUser(id);
         modelAndView.addObject("orders", ordersByUser);
+        modelAndView.addObject("today", LocalDateTime.now());
         return modelAndView;
     }
 }

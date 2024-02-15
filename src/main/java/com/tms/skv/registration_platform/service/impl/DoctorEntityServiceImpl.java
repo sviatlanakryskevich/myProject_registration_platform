@@ -21,16 +21,14 @@ public class DoctorEntityServiceImpl implements DoctorEntityService {
     private final DoctorMapper mapper;
     @Override
     public List<DoctorEntity> findAll() {
-        List<DoctorEntity> all = doctorRepository.findAll();
-        return all;
+        return doctorRepository.findAll();
     }
 
     @Override
     public DoctorEntity findById(Integer id) {
         Optional<DoctorEntity> doctorOpt = doctorRepository.findById(id);
         if(doctorOpt.isPresent()){
-            DoctorEntity doctorEntity = doctorOpt.get();
-            return doctorEntity;
+            return doctorOpt.get();
         }else {
             throw new NotFoundException("Doctor with this id not found");
         }
@@ -38,8 +36,7 @@ public class DoctorEntityServiceImpl implements DoctorEntityService {
 
     @Override
     public List<DoctorEntity> findBySpecialty(DoctorSpecialty specialty) {
-        List<DoctorEntity> bySpecialty = doctorRepository.findByDoctorSpecialty(specialty);
-        return bySpecialty;
+        return doctorRepository.findByDoctorSpecialty(specialty);
     }
 
     @Override

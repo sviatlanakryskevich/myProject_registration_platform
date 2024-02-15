@@ -6,10 +6,8 @@ import com.tms.skv.registration_platform.entity.DoctorEntity;
 import com.tms.skv.registration_platform.entity.OrderEntity;
 import com.tms.skv.registration_platform.exc.AppointmentIsExistException;
 import com.tms.skv.registration_platform.repository.OrderRepository;
-import com.tms.skv.registration_platform.repository.UserRepository;
 import com.tms.skv.registration_platform.service.OrderEntityService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,8 +24,7 @@ public class OrderEntityServiceImpl implements OrderEntityService {
     private final OrderRepository orderRepository;
     @Override
     public List<OrderEntity> getDoctorOrdersByTime(LocalDateTime from, LocalDateTime to, Integer doctorId) {
-        List<OrderEntity> ordersByTime = orderRepository.findByAppointmentTimeAfterAndAppointmentTimeBeforeAndDoctor_Id(from, to, doctorId);
-        return ordersByTime;
+        return orderRepository.findByAppointmentTimeAfterAndAppointmentTimeBeforeAndDoctor_Id(from, to, doctorId);
     }
 
     @Override
@@ -40,8 +37,7 @@ public class OrderEntityServiceImpl implements OrderEntityService {
                     .user(user)
                     .doctor(doctor)
                     .build();
-            OrderEntity save = orderRepository.save(order);
-            return save;
+            return orderRepository.save(order);
         } else {
             throw new AppointmentIsExistException("Запись уже недоступна, пожалуйста перезагрузите страницу");
         }
@@ -52,8 +48,7 @@ public class OrderEntityServiceImpl implements OrderEntityService {
     @Override
     @Transactional
     public List<OrderEntity> getOrdersByUser(Integer userId){
-        List<OrderEntity> orders = orderRepository.findByUser_Id(userId);
-        return orders;
+        return orderRepository.findByUser_Id(userId);
     }
 
     @Override

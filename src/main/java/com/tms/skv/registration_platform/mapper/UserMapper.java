@@ -1,8 +1,6 @@
 package com.tms.skv.registration_platform.mapper;
 
-import com.tms.skv.registration_platform.entity.DoctorEntity;
 import com.tms.skv.registration_platform.entity.UserEntity;
-import com.tms.skv.registration_platform.model.DoctorDto;
 import com.tms.skv.registration_platform.model.UserDto;
 import com.tms.skv.registration_platform.model.UserUpdateDto;
 import org.mapstruct.Mapper;

@@ -1,11 +1,9 @@
 package com.tms.skv.registration_platform.web;
 
 import com.tms.skv.registration_platform.domain.DoctorSpecialty;
-import com.tms.skv.registration_platform.domain.Sex;
 import com.tms.skv.registration_platform.entity.DoctorEntity;
 import com.tms.skv.registration_platform.mapper.DoctorMapper;
 import com.tms.skv.registration_platform.model.DoctorDto;
-import com.tms.skv.registration_platform.model.UserDto;
 import com.tms.skv.registration_platform.service.impl.DoctorEntityServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -43,7 +41,7 @@ public class AdministrationController {
     }
 
     @GetMapping("/updateDoctor")
-    public ModelAndView updateFormPage(@RequestParam(value = "doctorId", required = true)Integer doctorId) {
+    public ModelAndView updateFormPage(@RequestParam(value = "doctorId")Integer doctorId) {
         DoctorEntity doctor = doctorEntityService.findById(doctorId);
         DoctorDto dto = doctorMapper.toDto(doctor);
         ModelAndView modelAndView = new ModelAndView("createDoctor");
