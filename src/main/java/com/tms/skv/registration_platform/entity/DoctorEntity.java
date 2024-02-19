@@ -2,16 +2,14 @@ package com.tms.skv.registration_platform.entity;
 
 import com.tms.skv.registration_platform.domain.DoctorSpecialty;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "doctors")
 public class DoctorEntity {
