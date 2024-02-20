@@ -5,6 +5,7 @@ import com.tms.skv.registration_platform.entity.UserEntity;
 import com.tms.skv.registration_platform.entity.DoctorEntity;
 import com.tms.skv.registration_platform.entity.OrderEntity;
 import com.tms.skv.registration_platform.exc.AppointmentIsExistException;
+import com.tms.skv.registration_platform.exc.NotFoundException;
 import com.tms.skv.registration_platform.repository.OrderRepository;
 import com.tms.skv.registration_platform.service.OrderEntityService;
 import lombok.RequiredArgsConstructor;
@@ -54,7 +55,13 @@ public class OrderEntityServiceImpl implements OrderEntityService {
     @Override
     @Transactional
     public void deleteOrder(Integer orderId) {
-        orderRepository.deleteById(orderId);
+        Optional<OrderEntity> orderOpt = orderRepository.findById(orderId);
+        if(orderOpt.isPresent()){
+            OrderEntity order = orderOpt.get();
+            orderRepository.delete(order);
+        }else {
+            throw new NotFoundException("Заказ с таким id не найден");
+        }
     }
 
     public List<LocalDate> getCurrentWeek(LocalDateTime dateTime) {

@@ -5,9 +5,12 @@ import com.tms.skv.registration_platform.model.UserDto;
 import com.tms.skv.registration_platform.model.UserUpdateDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
+
     @Mapping(target = "login", source = "username")
     UserEntity toEntity(UserDto dto);
 

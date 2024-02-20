@@ -3,6 +3,7 @@ package com.tms.skv.registration_platform.model;
 import com.tms.skv.registration_platform.domain.Sex;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -11,6 +12,7 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class UserDto {
     private Integer id;
     @NotBlank(message = "Обязательное поле")
