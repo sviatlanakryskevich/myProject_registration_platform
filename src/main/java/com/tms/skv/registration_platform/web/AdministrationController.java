@@ -8,10 +8,7 @@ import com.tms.skv.registration_platform.service.impl.DoctorEntityServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
@@ -51,7 +48,7 @@ public class AdministrationController {
     }
 
     @PostMapping("/createDoctor")
-    public ModelAndView saveDoctor(@Valid DoctorDto doctorDto, BindingResult result) {
+    public ModelAndView saveDoctor(@Valid @RequestBody DoctorDto doctorDto, BindingResult result) {
         if (!result.hasFieldErrors()) {
             ModelAndView modelAndView = new ModelAndView("admin");
             if(doctorDto.getId() !=null){
