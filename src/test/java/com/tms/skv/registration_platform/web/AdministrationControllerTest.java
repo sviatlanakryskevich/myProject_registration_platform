@@ -14,16 +14,15 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 
@@ -135,7 +134,7 @@ class AdministrationControllerTest {
                 .build();
         String json = objectMapper.writeValueAsString(doctorDto);
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/createDoctor")
-                        .content(json).contentType(MediaType.APPLICATION_JSON))
+                        .content(json).contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8)))
                 .andReturn();
         ModelAndView modelAndView = mvcResult.getModelAndView();
         String viewName = modelAndView.getViewName();
