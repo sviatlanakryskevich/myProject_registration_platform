@@ -11,6 +11,7 @@ import com.tms.skv.registration_platform.model.DoctorDto;
 import com.tms.skv.registration_platform.model.UserDto;
 import com.tms.skv.registration_platform.model.UserUpdateDto;
 import com.tms.skv.registration_platform.service.impl.DoctorEntityServiceImpl;
+import com.tms.skv.registration_platform.service.impl.UserDetailsServiceImpl;
 import com.tms.skv.registration_platform.service.impl.UserEntityServiceImpl;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -21,7 +22,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -47,8 +50,6 @@ class UserControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-
-
     @Test
     void save() {
     }
@@ -72,7 +73,7 @@ class UserControllerTest {
     }
 
     @Test
-    @WithMockUser("sviatlana")
+    @WithMockUser(value = "sviatlana", roles = "USER")
     void updateFormPage() throws Exception {
         UserEntity user = UserEntity.builder()
                 .id(1)
@@ -100,7 +101,7 @@ class UserControllerTest {
                 .phoneNumber("+48787916247")
                 .build();
 
-        Mockito.when(userEntityService.getById(1)).thenReturn(user);
+        Mockito.when(userEntityService.getByUsername("sviatlana")).thenReturn(user);
         Mockito.when(userMapper.toUpdateDto(user)).thenReturn(updateDto);
 
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/updateUser"))

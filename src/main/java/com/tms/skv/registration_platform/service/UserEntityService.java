@@ -8,5 +8,6 @@ public interface UserEntityService {
     UserEntity getById(Integer id);
     void save(UserDto user);
     void update(UserUpdateDto user);
+    UserEntity getByUsername(String userName);
 
 }

@@ -5,11 +5,14 @@ import com.tms.skv.registration_platform.entity.UserEntity;
 import com.tms.skv.registration_platform.mapper.UserMapper;
 import com.tms.skv.registration_platform.model.UserDto;
 import com.tms.skv.registration_platform.model.UserUpdateDto;
+import com.tms.skv.registration_platform.repository.UserRepository;
 import com.tms.skv.registration_platform.service.UserEntityService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -61,10 +64,10 @@ public class UserController {
 
     @GetMapping("/updateUser")
     public ModelAndView updateFormPage() {
-        UserEntity user = (UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Integer id = user.getId();
-        UserEntity byId = userEntityService.getById(id);
-        UserUpdateDto updateDto = userMapper.toUpdateDto(byId);
+        UserDetails userDetails = (UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = userDetails.getUsername();
+        UserEntity userEntity = userEntityService.getByUsername(username);
+        UserUpdateDto updateDto = userMapper.toUpdateDto(userEntity);
         ModelAndView modelAndView = new ModelAndView("updateUser");
         modelAndView.addObject("sexes", Sex.values());
         modelAndView.addObject("userUpdateDto", updateDto);

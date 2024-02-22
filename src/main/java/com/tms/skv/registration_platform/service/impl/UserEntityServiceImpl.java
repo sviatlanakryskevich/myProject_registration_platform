@@ -72,5 +72,16 @@ public class UserEntityServiceImpl implements UserEntityService {
         }
     }
 
+    @Override
+    public UserEntity getByUsername(String userName) {
+        Optional<UserEntity> userOpt = userRepository.findByLogin(userName);
+        if(userOpt.isPresent()){
+           UserEntity userEntity = userOpt.get();
+           return userEntity;
+        }else {
+            throw new NotFoundException("Пользователь с таким именем не найден");
+        }
+    }
+
 
 }

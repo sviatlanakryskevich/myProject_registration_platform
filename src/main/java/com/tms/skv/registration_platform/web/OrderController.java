@@ -8,8 +8,10 @@ import com.tms.skv.registration_platform.entity.OrderEntity;
 import com.tms.skv.registration_platform.exc.AppointmentIsExistException;
 import com.tms.skv.registration_platform.service.impl.DoctorEntityServiceImpl;
 import com.tms.skv.registration_platform.service.impl.OrderEntityServiceImpl;
+import com.tms.skv.registration_platform.service.impl.UserEntityServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -25,6 +27,7 @@ import java.util.*;
 public class OrderController {
     private final DoctorEntityServiceImpl doctorEntityService;
     private final OrderEntityServiceImpl orderEntityService;
+    private final UserEntityServiceImpl userEntityService;
 
     @GetMapping("/main")
     public ModelAndView mainPage() {
@@ -84,8 +87,10 @@ public class OrderController {
 
     @GetMapping("/getOrders")
     public ModelAndView getOrders() {
-        UserEntity user = (UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Integer id = user.getId();
+        UserDetails userDetails = (UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = userDetails.getUsername();
+        UserEntity userEntity = userEntityService.getByUsername(username);
+        Integer id = userEntity.getId();
         List<OrderEntity> ordersByUser = orderEntityService.getOrdersByUser(id);
         LocalDateTime today = LocalDateTime.now();
 
@@ -99,8 +104,10 @@ public class OrderController {
     public ModelAndView deleteOrder(@RequestParam(value = "id") Integer orderId) {
         ModelAndView modelAndView = new ModelAndView("myOrders");
         orderEntityService.deleteOrder(orderId);
-        UserEntity user = (UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Integer id = user.getId();
+        UserDetails userDetails = (UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = userDetails.getUsername();
+        UserEntity userEntity = userEntityService.getByUsername(username);
+        Integer id = userEntity.getId();
         List<OrderEntity> ordersByUser = orderEntityService.getOrdersByUser(id);
         modelAndView.addObject("orders", ordersByUser);
         modelAndView.addObject("today", LocalDateTime.now());

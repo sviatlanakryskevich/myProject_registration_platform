@@ -16,6 +16,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -124,7 +125,7 @@ class AdministrationControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "qwerty", roles = "ADMIN")
+    @WithMockUser(username = "qwerty", password = "qwerty", roles = "ADMIN")
     void saveDoctor() throws Exception {
         DoctorDto doctorDto = DoctorDto.builder()
                 .id(null)
