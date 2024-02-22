@@ -39,9 +39,9 @@
                 </tr>
                 </tbody>
             </table>
-            <ul class="pagination">
-                <li class="page-item"><a class="page-link" th:href="@{/schedule/{id} (id=${doctor.getId()}, dateTime=${previous})}">Previous</a></li>
-                <li class="page-item"><a class="page-link" th:href="@{/schedule/{id} (id=${doctor.getId()}, dateTime=${next})}">Next</a></li>
+            <ul class="pagination" style="justify-content: center;padding-top: 30px;">
+                <li class="page-item"><a class="page-link" style="width: 90px;text-align: center;" th:href="@{/schedule/{id} (id=${doctor.getId()}, dateTime=${previous})}">Назад</a></li>
+                <li class="page-item"><a class="page-link" style="width: 90px;text-align: center;" th:href="@{/schedule/{id} (id=${doctor.getId()}, dateTime=${next})}">Вперёд</a></li>
             </ul>
         </div>
 
