@@ -48,7 +48,7 @@ public class AdministrationController {
     }
 
     @PostMapping("/createDoctor")
-    public ModelAndView saveDoctor(@Valid @RequestBody DoctorDto doctorDto, BindingResult result) {
+    public ModelAndView saveDoctor(@Valid DoctorDto doctorDto, BindingResult result) {
         if (!result.hasFieldErrors()) {
             ModelAndView modelAndView = new ModelAndView("admin");
             if(doctorDto.getId() !=null){

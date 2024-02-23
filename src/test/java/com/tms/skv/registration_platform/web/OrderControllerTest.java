@@ -2,6 +2,7 @@ package com.tms.skv.registration_platform.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tms.skv.registration_platform.domain.DoctorSpecialty;
+import com.tms.skv.registration_platform.domain.Record;
 import com.tms.skv.registration_platform.domain.Sex;
 import com.tms.skv.registration_platform.entity.DoctorEntity;
 import com.tms.skv.registration_platform.entity.OrderEntity;
@@ -28,9 +29,7 @@ import org.springframework.web.servlet.ModelAndView;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @ExtendWith(MockitoExtension.class)
 @WebMvcTest(OrderController.class)
@@ -91,7 +90,8 @@ class OrderControllerTest {
         Assertions.assertThat(doctorsBySpecialty).contains(doctor1);
     }
 
-    /*@Test
+    @Test
+    @WithMockUser("sviatlana")
     void getSchedule() throws Exception {
         LocalDateTime dateTime = LocalDateTime.of(2024, 2, 22, 8, 30);
         LocalDate mon = LocalDate.of(2024, 2, 19);
@@ -99,6 +99,7 @@ class OrderControllerTest {
         LocalDate wed = LocalDate.of(2024, 2, 21);
         LocalDate thurs = LocalDate.of(2024, 2, 22);
         LocalDate fri = LocalDate.of(2024, 2, 23);
+        List<LocalDate> week = List.of(mon, tues, wed, thurs, fri);
         DoctorEntity doctor1 = DoctorEntity.builder()
                 .doctorSpecialty(DoctorSpecialty.CARDIOLOGIST)
                 .id(1)
@@ -107,20 +108,39 @@ class OrderControllerTest {
                 .build();
         LocalTime time1 = LocalTime.of(8, 0);
         LocalTime time2 = LocalTime.of(8, 30);
+
+        Record record = new Record();
+        List<Record> records = List.of(record);
+        Map<LocalTime, List<Record>> intervals = new HashMap<>();
+        intervals.put(time1, records);
+        intervals.put(time2, records);
+
         Mockito.when(doctorEntityService.findById(1)).thenReturn(doctor1);
-        Mockito.when(orderEntityService.getCurrentWeek(dateTime)).thenReturn(List.of(mon, tues, wed, thurs, fri));
-        Mockito.when(orderEntityService.getTimeSlotsMap(1, List.of(mon, tues, wed, thurs, fri))).thenReturn()
+        Mockito.when(orderEntityService.getCurrentWeek(dateTime)).thenReturn(week);
+        Mockito.when(orderEntityService.getTimeSlotsMap(1, List.of(mon, tues, wed, thurs, fri))).thenReturn(intervals);
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/schedule/{id}", doctor1.getId())
                         .param("dateTime", "2024-02-22T08:30:00"))
                 .andDo(MockMvcResultHandlers.print())
                 .andReturn();
         ModelAndView modelAndView = mvcResult.getModelAndView();
         String viewName = modelAndView.getViewName();
-        var doctorsBySpecialty = (List<DoctorEntity>) modelAndView.getModel().get("doctorsBySpecialty");
-        Object now = modelAndView.getModel().get("now");
-    }*/
+        var currentWeek = (List<LocalDate>)modelAndView.getModel().get("currentWeek");
+        var intervals1 = modelAndView.getModel().get("intervals");
+        var doctor = modelAndView.getModel().get("doctor");
+        var next1 = modelAndView.getModel().get("next");
+        var previous1 = modelAndView.getModel().get("previous");
 
-   /* @Test
+        Assertions.assertThat(viewName).isEqualTo("schedule");
+        Assertions.assertThat(currentWeek).hasSize(5);
+        Assertions.assertThat(currentWeek).contains(mon, thurs, wed, tues, fri);
+        Assertions.assertThat(intervals1).isEqualTo(intervals);
+        Assertions.assertThat(next1).isInstanceOf(LocalDateTime.class);
+        Assertions.assertThat(previous1).isInstanceOf(LocalDateTime.class);
+        Assertions.assertThat(doctor).isEqualTo(doctor1);
+    }
+
+    /*@Test
+    @WithMockUser("sviatlana")
     void createOrder() throws Exception {
         DoctorEntity doctor1 = DoctorEntity.builder()
                 .doctorSpecialty(DoctorSpecialty.CARDIOLOGIST)
@@ -128,12 +148,43 @@ class OrderControllerTest {
                 .experience(2.0)
                 .fullName("Сойко Вера Владимировна")
                 .build();
+        UserEntity user = UserEntity.builder()
+                .id(1)
+                .login("sviatlana")
+                .password("$2a$10$oArt.zTpia2sqFq1pkHPMuYJrMMfw77l3MSkPsoXO0DAoyQTZ9UyS")
+                .address("Torunska")
+                .email("sviatlana.skiba@gmail.com")
+                .birthday(LocalDate.of(1996, 8, 8))
+                .firstName("Sviatlana")
+                .lastName("Kryskevich")
+                .sex(Sex.WOMAN)
+                .phoneNumber("+48787916247")
+                .perm("ROLE_USER")
+                .build();
+        LocalDateTime appointment = LocalDateTime.of(2024, 2, 22,8, 30);
+        OrderEntity order = OrderEntity.builder()
+                .doctor(doctor1)
+                .appointmentTime(appointment)
+                .id(1)
+                .user(user)
+                .build();
         Mockito.when(doctorEntityService.findById(1)).thenReturn(doctor1);
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/createOrder")
+        Mockito.when(userEntityService.getByUsername("sviatlana")).thenReturn(user);
+        Mockito.when(orderEntityService.createOrder(doctor1, user,appointment)).thenReturn(order);
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/createOrder")
                         .param("doctorId", "1")
-                        .param("appointment", "2024-02-22T08:30:00").principal())
+                        .param("appointment", "2024-02-22T08:30:00"))
                 .andDo(MockMvcResultHandlers.print())
                 .andReturn();
+        ModelAndView modelAndView = mvcResult.getModelAndView();
+        String viewName = modelAndView.getViewName();
+        var doctorId = modelAndView.getModel().get("doctorId");
+        var now = modelAndView.getModel().get("now");
+        var savedOrder = modelAndView.getModel().get("savedOrder");
+        Assertions.assertThat(viewName).isEqualTo("order");
+        Assertions.assertThat(doctorId).isEqualTo(doctor1.getId());
+        Assertions.assertThat(now).isInstanceOf(LocalDateTime.class);
+        Assertions.assertThat(savedOrder).isEqualTo(order);
     }*/
 
     @Test

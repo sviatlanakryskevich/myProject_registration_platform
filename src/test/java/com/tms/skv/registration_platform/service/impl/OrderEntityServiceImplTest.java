@@ -203,11 +203,4 @@ class OrderEntityServiceImplTest {
         Mockito.verify(orderRepository, Mockito.times(0)).delete(Mockito.any());
     }
 
-    @Test
-    void getCurrentWeek() {
-    }
-
-    @Test
-    void getTimeSlotsMap() {
-    }
 }

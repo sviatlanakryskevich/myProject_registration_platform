@@ -72,7 +72,9 @@ public class OrderController {
     public ModelAndView createOrder(@RequestParam(value = "doctorId") Integer doctorId,
                                     @RequestParam(value = "appointment") LocalDateTime appointment) {
         DoctorEntity doctor = doctorEntityService.findById(doctorId);
-        UserEntity user = (UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = userDetails.getUsername();
+        UserEntity user = userEntityService.getByUsername(username);
         ModelAndView modelAndView = new ModelAndView("order");
         modelAndView.addObject("doctorId", doctorId);
         modelAndView.addObject("now", LocalDateTime.now());

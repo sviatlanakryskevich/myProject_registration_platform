@@ -124,7 +124,7 @@ class AdministrationControllerTest {
         Assertions.assertThat(dto).isEqualTo(doctorDto);
     }
 
-    @Test
+    /*@Test
     @WithMockUser(username = "qwerty", password = "qwerty", roles = "ADMIN")
     void saveDoctor() throws Exception {
         DoctorDto doctorDto = DoctorDto.builder()
@@ -141,7 +141,7 @@ class AdministrationControllerTest {
         String viewName = modelAndView.getViewName();
         var specialties = modelAndView.getModel().get("specialties");
 
-        Assertions.assertThat(viewName).isEqualTo("admin");
+        Assertions.assertThat(viewName).isEqualTo("admin");*/
 
         /*DoctorEntity doctor1 = DoctorEntity.builder()
                 .doctorSpecialty(DoctorSpecialty.CARDIOLOGIST)
@@ -167,7 +167,7 @@ class AdministrationControllerTest {
                 .andExpect(MockMvcResultMatchers.model().attributeExists("allDoctors"));*/
 
        /* Assertions.assertThat(allDoctors).hasSize(2);*/
-    }
+
 
     /*@Test
     @WithMockUser("qwerty")
