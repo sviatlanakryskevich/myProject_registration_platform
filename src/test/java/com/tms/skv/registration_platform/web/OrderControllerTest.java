@@ -1,25 +1,28 @@
 package com.tms.skv.registration_platform.web;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tms.skv.registration_platform.domain.DoctorSpecialty;
 import com.tms.skv.registration_platform.domain.Record;
 import com.tms.skv.registration_platform.domain.Sex;
 import com.tms.skv.registration_platform.entity.DoctorEntity;
 import com.tms.skv.registration_platform.entity.OrderEntity;
 import com.tms.skv.registration_platform.entity.UserEntity;
-import com.tms.skv.registration_platform.service.UserEntityService;
 import com.tms.skv.registration_platform.service.impl.DoctorEntityServiceImpl;
 import com.tms.skv.registration_platform.service.impl.OrderEntityServiceImpl;
 import com.tms.skv.registration_platform.service.impl.UserEntityServiceImpl;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -31,8 +34,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
 
-@ExtendWith(MockitoExtension.class)
-@WebMvcTest(OrderController.class)
+@WebMvcTest(value = OrderController.class, excludeAutoConfiguration =  SecurityAutoConfiguration.class)
 class OrderControllerTest {
     @MockBean
     private DoctorEntityServiceImpl doctorEntityService;
@@ -44,13 +46,9 @@ class OrderControllerTest {
     private UserEntityServiceImpl userEntityService;
 
     @Autowired
-    private ObjectMapper objectMapper;
-
-    @Autowired
     private MockMvc mockMvc;
 
     @Test
-    @WithMockUser("sviatlana")
     void mainPage() throws Exception {
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/main"))
                 .andDo(MockMvcResultHandlers.print())
@@ -66,7 +64,6 @@ class OrderControllerTest {
     }
 
     @Test
-    @WithMockUser("sviatlana")
     void getDoctorsBySpecialty() throws Exception {
         DoctorSpecialty cardiologist = DoctorSpecialty.CARDIOLOGIST;
         DoctorEntity doctor1 = DoctorEntity.builder()
@@ -91,7 +88,6 @@ class OrderControllerTest {
     }
 
     @Test
-    @WithMockUser("sviatlana")
     void getSchedule() throws Exception {
         LocalDateTime dateTime = LocalDateTime.of(2024, 2, 22, 8, 30);
         LocalDate mon = LocalDate.of(2024, 2, 19);
@@ -139,8 +135,7 @@ class OrderControllerTest {
         Assertions.assertThat(doctor).isEqualTo(doctor1);
     }
 
-    /*@Test
-    @WithMockUser("sviatlana")
+    @Test
     void createOrder() throws Exception {
         DoctorEntity doctor1 = DoctorEntity.builder()
                 .doctorSpecialty(DoctorSpecialty.CARDIOLOGIST)
@@ -168,8 +163,18 @@ class OrderControllerTest {
                 .id(1)
                 .user(user)
                 .build();
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+        UserDetails userDetails = new User("sviatlana", "password", authorities);
+
+        Authentication authentication = Mockito.mock(Authentication.class);
+        Mockito.when(authentication.getPrincipal()).thenReturn(userDetails);
+        SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+        Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
+
+        SecurityContextHolder.setContext(securityContext);
         Mockito.when(doctorEntityService.findById(1)).thenReturn(doctor1);
-        Mockito.when(userEntityService.getByUsername("sviatlana")).thenReturn(user);
+        Mockito.when(userEntityService.getByUsername(userDetails.getUsername())).thenReturn(user);
         Mockito.when(orderEntityService.createOrder(doctor1, user,appointment)).thenReturn(order);
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/createOrder")
                         .param("doctorId", "1")
@@ -185,10 +190,9 @@ class OrderControllerTest {
         Assertions.assertThat(doctorId).isEqualTo(doctor1.getId());
         Assertions.assertThat(now).isInstanceOf(LocalDateTime.class);
         Assertions.assertThat(savedOrder).isEqualTo(order);
-    }*/
+    }
 
     @Test
-    @WithMockUser("sviatlana")
     void getOrders() throws Exception {
         UserEntity user = UserEntity.builder()
                 .id(1)
@@ -227,8 +231,17 @@ class OrderControllerTest {
                 .id(2)
                 .user(user)
                 .build();
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+        UserDetails userDetails = new User("sviatlana", "password", authorities);
 
-        Mockito.when(userEntityService.getByUsername("sviatlana")).thenReturn(user);
+        Authentication authentication = Mockito.mock(Authentication.class);
+        Mockito.when(authentication.getPrincipal()).thenReturn(userDetails);
+        SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+        Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
+
+        SecurityContextHolder.setContext(securityContext);
+        Mockito.when(userEntityService.getByUsername(userDetails.getUsername())).thenReturn(user);
         Mockito.when(orderEntityService.getOrdersByUser(1)).thenReturn(List.of(order1, order2));
 
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/getOrders"))
@@ -246,7 +259,6 @@ class OrderControllerTest {
     }
 
     @Test
-    @WithMockUser("sviatlana")
     void deleteOrder() throws Exception {
         UserEntity user = UserEntity.builder()
                 .id(1)
@@ -267,20 +279,24 @@ class OrderControllerTest {
                 .experience(2.0)
                 .fullName("Сойко Вера Владимировна")
                 .build();
-        DoctorEntity doctor2 = DoctorEntity.builder()
-                .doctorSpecialty(DoctorSpecialty.NEUROLOGIST)
-                .id(2)
-                .experience(12.0)
-                .fullName("Сойко Иван Владимировна")
-                .build();
         OrderEntity order1 = OrderEntity.builder()
                 .doctor(doctor1)
                 .appointmentTime(LocalDateTime.of(2024, 2, 21, 11, 0))
                 .id(1)
                 .user(user)
                 .build();
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+        UserDetails userDetails = new User("sviatlana", "password", authorities);
 
-        Mockito.when(userEntityService.getByUsername("sviatlana")).thenReturn(user);
+        Authentication authentication = Mockito.mock(Authentication.class);
+        Mockito.when(authentication.getPrincipal()).thenReturn(userDetails);
+        SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+        Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
+
+        SecurityContextHolder.setContext(securityContext);
+
+        Mockito.when(userEntityService.getByUsername(userDetails.getUsername())).thenReturn(user);
         Mockito.when(orderEntityService.getOrdersByUser(1)).thenReturn(List.of(order1));
 
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/deleteOrder").param("id", "2"))

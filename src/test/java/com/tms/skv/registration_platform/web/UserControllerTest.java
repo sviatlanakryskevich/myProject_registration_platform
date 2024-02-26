@@ -1,42 +1,39 @@
 package com.tms.skv.registration_platform.web;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tms.skv.registration_platform.config.WebSecurityConfig;
-import com.tms.skv.registration_platform.domain.DoctorSpecialty;
 import com.tms.skv.registration_platform.domain.Sex;
 import com.tms.skv.registration_platform.entity.UserEntity;
-import com.tms.skv.registration_platform.mapper.DoctorMapper;
 import com.tms.skv.registration_platform.mapper.UserMapper;
-import com.tms.skv.registration_platform.model.DoctorDto;
 import com.tms.skv.registration_platform.model.UserDto;
 import com.tms.skv.registration_platform.model.UserUpdateDto;
-import com.tms.skv.registration_platform.service.impl.DoctorEntityServiceImpl;
-import com.tms.skv.registration_platform.service.impl.UserDetailsServiceImpl;
 import com.tms.skv.registration_platform.service.impl.UserEntityServiceImpl;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.test.context.support.WithAnonymousUser;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.context.support.WithUserDetails;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
-@ExtendWith(MockitoExtension.class)
-@WebMvcTest(UserController.class)
+@WebMvcTest(value = UserController.class, excludeAutoConfiguration =  SecurityAutoConfiguration.class)
 class UserControllerTest {
     @MockBean
     private UserEntityServiceImpl userEntityService;
@@ -45,19 +42,55 @@ class UserControllerTest {
     private UserMapper userMapper;
 
     @Autowired
-    private ObjectMapper objectMapper;
-
-    @Autowired
     private MockMvc mockMvc;
 
     @Test
-    void save() {
+    void save() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/register")
+                        .param("username", "sviatlana")
+                        .param("password", "sviatlana")
+                        .param("address", "Torunska")
+                        .param("email","sviatlana.skiba@gmail.com")
+                        .param("birthday", "1994-02-22")
+                        .param("firstName", "Sviatlana")
+                        .param("lastName", "Kryskevich")
+                        .param("sex", Sex.WOMAN.toString())
+                        .param("phoneNumber", "+48787916247")
+                        .contentType(new MediaType(MediaType.APPLICATION_FORM_URLENCODED, StandardCharsets.UTF_8)))
+                .andDo(MockMvcResultHandlers.print())
+                .andReturn();
+        ModelAndView modelAndView = mvcResult.getModelAndView();
+        String viewName = modelAndView.getViewName();
+        Assertions.assertThat(viewName).isEqualTo("login");
     }
 
     @Test
-    @WithMockUser("sviatlana")
+    void saveWithValidErrors() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/register")
+                        .param("username", "")
+                        .param("password", "sviatlana")
+                        .param("address", "Torunska")
+                        .param("email","sviatlana.skiba@gmail.com")
+                        .param("birthday", "1994-02-22")
+                        .param("firstName", "Sviatlana")
+                        .param("lastName", "Kryskevich")
+                        .param("sex", Sex.WOMAN.toString())
+                        .param("phoneNumber", "+48787916247")
+                        .contentType(new MediaType(MediaType.APPLICATION_FORM_URLENCODED, StandardCharsets.UTF_8)))
+                .andDo(MockMvcResultHandlers.print())
+                .andReturn();
+        ModelAndView modelAndView = mvcResult.getModelAndView();
+        String viewName = modelAndView.getViewName();
+        var sexes = modelAndView.getModel().get("sexes");
+        Assertions.assertThat(viewName).isEqualTo("register");
+        Assertions.assertThat(sexes).isInstanceOf(Sex[].class);
+        Sex[] sexes1 = (Sex[]) sexes;
+        Assertions.assertThat(sexes1).containsAll(Arrays.stream(Sex.values()).toList());
+    }
+
+    @Test
     void registerPage() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/register").secure(false))
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/register"))
                 .andDo(MockMvcResultHandlers.print())
                 .andReturn();
         ModelAndView modelAndView = mvcResult.getModelAndView();
@@ -73,7 +106,6 @@ class UserControllerTest {
     }
 
     @Test
-    @WithMockUser(value = "sviatlana", roles = "USER")
     void updateFormPage() throws Exception {
         UserEntity user = UserEntity.builder()
                 .id(1)
@@ -100,8 +132,17 @@ class UserControllerTest {
                 .sex(Sex.WOMAN)
                 .phoneNumber("+48787916247")
                 .build();
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+        UserDetails userDetails = new User("sviatlana", "password", authorities);
 
-        Mockito.when(userEntityService.getByUsername("sviatlana")).thenReturn(user);
+        Authentication authentication = Mockito.mock(Authentication.class);
+        Mockito.when(authentication.getPrincipal()).thenReturn(userDetails);
+        SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+        Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
+
+        SecurityContextHolder.setContext(securityContext);
+        Mockito.when(userEntityService.getByUsername(userDetails.getUsername())).thenReturn(user);
         Mockito.when(userMapper.toUpdateDto(user)).thenReturn(updateDto);
 
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/updateUser"))
@@ -120,7 +161,54 @@ class UserControllerTest {
     }
 
     @Test
-    @WithMockUser("sviatlana")
-    void updateUser() {
+    void updateUser() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/updateUser")
+                        .param("id", "1")
+                        .param("username", "sviatlana")
+                        .param("password", "sviatlana")
+                        .param("address", "Torunska")
+                        .param("email","sviatlana.skiba@gmail.com")
+                        .param("birthday", "1994-02-22")
+                        .param("firstName", "Sviatlana")
+                        .param("lastName", "Kryskevich")
+                        .param("sex", Sex.WOMAN.toString())
+                        .param("phoneNumber", "+48787916247")
+                        .contentType(new MediaType(MediaType.APPLICATION_FORM_URLENCODED, StandardCharsets.UTF_8)))
+                .andDo(MockMvcResultHandlers.print())
+                .andReturn();
+        ModelAndView modelAndView = mvcResult.getModelAndView();
+        String viewName = modelAndView.getViewName();
+        String message = (String) modelAndView.getModel().get("message");
+        var sexes = modelAndView.getModel().get("sexes");
+        Assertions.assertThat(sexes).isInstanceOf(Sex[].class);
+        Sex[] sexes1 = (Sex[]) sexes;
+        Assertions.assertThat(sexes1).containsAll(Arrays.stream(Sex.values()).toList());
+        Assertions.assertThat(viewName).isEqualTo("updateUser");
+        Assertions.assertThat(message).isEqualTo("Редактирование сохранено");
+    }
+
+    @Test
+    void updateUserWithValidErrors() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/updateUser")
+                        .param("id", "1")
+                        .param("username", "")
+                        .param("password", "sviatlana")
+                        .param("address", "Torunska")
+                        .param("email","sviatlana.skiba@gmail.com")
+                        .param("birthday", "1994-02-22")
+                        .param("firstName", "Sviatlana")
+                        .param("lastName", "Kryskevich")
+                        .param("sex", Sex.WOMAN.toString())
+                        .param("phoneNumber", "+48787916247")
+                        .contentType(new MediaType(MediaType.APPLICATION_FORM_URLENCODED, StandardCharsets.UTF_8)))
+                .andDo(MockMvcResultHandlers.print())
+                .andReturn();
+        ModelAndView modelAndView = mvcResult.getModelAndView();
+        String viewName = modelAndView.getViewName();
+        var sexes = modelAndView.getModel().get("sexes");
+        Assertions.assertThat(sexes).isInstanceOf(Sex[].class);
+        Sex[] sexes1 = (Sex[]) sexes;
+        Assertions.assertThat(sexes1).containsAll(Arrays.stream(Sex.values()).toList());
+        Assertions.assertThat(viewName).isEqualTo("updateUser");
     }
 }

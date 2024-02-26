@@ -1,6 +1,5 @@
 package com.tms.skv.registration_platform.web;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tms.skv.registration_platform.domain.DoctorSpecialty;
 import com.tms.skv.registration_platform.entity.DoctorEntity;
 import com.tms.skv.registration_platform.mapper.DoctorMapper;
@@ -8,15 +7,12 @@ import com.tms.skv.registration_platform.model.DoctorDto;
 import com.tms.skv.registration_platform.service.impl.DoctorEntityServiceImpl;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -27,8 +23,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 
-@ExtendWith(MockitoExtension.class)
-@WebMvcTest(AdministrationController.class)
+@WebMvcTest(value = AdministrationController.class, excludeAutoConfiguration = SecurityAutoConfiguration.class)
 class AdministrationControllerTest {
 
     @MockBean
@@ -38,13 +33,9 @@ class AdministrationControllerTest {
     private DoctorMapper doctorMapper;
 
     @Autowired
-    private ObjectMapper objectMapper;
-
-    @Autowired
     private MockMvc mockMvc;
 
     @Test
-    @WithMockUser("qwerty")
     void testGetAllDoctors() throws Exception {
         DoctorEntity doctor1 = DoctorEntity.builder()
                 .doctorSpecialty(DoctorSpecialty.CARDIOLOGIST)
@@ -73,7 +64,6 @@ class AdministrationControllerTest {
     }
 
     @Test
-    @WithMockUser("qwerty")
     void createFormPage() throws Exception {
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/createDoctor"))
                 .andDo(MockMvcResultHandlers.print())
@@ -91,7 +81,6 @@ class AdministrationControllerTest {
     }
 
     @Test
-    @WithMockUser("qwerty")
     void updateFormPage() throws Exception {
         DoctorEntity doctor = DoctorEntity.builder()
                 .doctorSpecialty(DoctorSpecialty.CARDIOLOGIST)
@@ -124,64 +113,74 @@ class AdministrationControllerTest {
         Assertions.assertThat(dto).isEqualTo(doctorDto);
     }
 
-    /*@Test
-    @WithMockUser(username = "qwerty", password = "qwerty", roles = "ADMIN")
+    @Test
     void saveDoctor() throws Exception {
-        DoctorDto doctorDto = DoctorDto.builder()
-                .id(null)
+        DoctorEntity doctor1 = DoctorEntity.builder()
                 .doctorSpecialty(DoctorSpecialty.CARDIOLOGIST)
+                .id(1)
                 .experience(12.0)
-                .fullName("")
+                .fullName("Сойко Вера Владимировна")
                 .build();
-        String json = objectMapper.writeValueAsString(doctorDto);
+        Mockito.when(doctorEntityService.findAll()).thenReturn(List.of(doctor1));
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/createDoctor")
-                        .content(json).contentType(new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8)))
+                .param("doctorSpecialty", DoctorSpecialty.CARDIOLOGIST.toString())
+                .param("experience", "12.0")
+                .param("fullName", "Сойко Вера Владимировна")
+                .contentType(new MediaType(MediaType.APPLICATION_FORM_URLENCODED, StandardCharsets.UTF_8)))
+                .andReturn();
+        ModelAndView modelAndView = mvcResult.getModelAndView();
+        String viewName = modelAndView.getViewName();
+
+        List<DoctorEntity> doctors = (List<DoctorEntity>) modelAndView.getModel().get("allDoctors");
+
+        Assertions.assertThat(viewName).isEqualTo("admin");
+        Assertions.assertThat(doctors).hasSize(1);
+        Assertions.assertThat(doctors).contains(doctor1);
+    }
+
+    @Test
+    void updateDoctor() throws Exception {
+        DoctorEntity doctor1 = DoctorEntity.builder()
+                .doctorSpecialty(DoctorSpecialty.CARDIOLOGIST)
+                .id(1)
+                .experience(12.0)
+                .fullName("Сойко Вера Владимировна")
+                .build();
+        Mockito.when(doctorEntityService.findAll()).thenReturn(List.of(doctor1));
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/createDoctor")
+                        .param("id", "1")
+                        .param("doctorSpecialty", DoctorSpecialty.CARDIOLOGIST.toString())
+                        .param("experience", "12.0")
+                        .param("fullName", "Сойко Вера Владимировна")
+                        .contentType(new MediaType(MediaType.APPLICATION_FORM_URLENCODED, StandardCharsets.UTF_8)))
+                .andReturn();
+        ModelAndView modelAndView = mvcResult.getModelAndView();
+        String viewName = modelAndView.getViewName();
+
+        List<DoctorEntity> doctors = (List<DoctorEntity>) modelAndView.getModel().get("allDoctors");
+
+        Assertions.assertThat(viewName).isEqualTo("admin");
+        Assertions.assertThat(doctors).hasSize(1);
+        Assertions.assertThat(doctors).contains(doctor1);
+    }
+
+    @Test
+    void saveDoctorWithErrorsFields() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/createDoctor")
+                        .param("doctorSpecialty", DoctorSpecialty.CARDIOLOGIST.toString())
+                        .param("experience", "12.0")
+                        .contentType(new MediaType(MediaType.APPLICATION_FORM_URLENCODED, StandardCharsets.UTF_8)))
                 .andReturn();
         ModelAndView modelAndView = mvcResult.getModelAndView();
         String viewName = modelAndView.getViewName();
         var specialties = modelAndView.getModel().get("specialties");
-
-        Assertions.assertThat(viewName).isEqualTo("admin");*/
-
-        /*DoctorEntity doctor1 = DoctorEntity.builder()
-                .doctorSpecialty(DoctorSpecialty.CARDIOLOGIST)
-                .id(1)
-                .experience(2.0)
-                .fullName("Сойко Вера Владимировна")
-                .build();
-        DoctorEntity doctor2 = DoctorEntity.builder()
-                .doctorSpecialty(DoctorSpecialty.ENDOCRINOLOGIST)
-                .id(2)
-                .experience(12.0)
-                .fullName("Дуб Вера Владимировна")
-                .build();
-        String json = objectMapper.writeValueAsString(doctorDto);
-        Mockito.when(doctorEntityService.findAll()).thenReturn(List.of(doctor1, doctor2));
-
-        // Perform the POST request and assert the response
-        mockMvc.perform(MockMvcRequestBuilders.post("/createDoctor")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.view().name("admin"))
-                .andExpect(MockMvcResultMatchers.model().attributeExists("allDoctors"));*/
-
-       /* Assertions.assertThat(allDoctors).hasSize(2);*/
-
-
-    /*@Test
-    @WithMockUser("qwerty")
-    void saveDoctorWithErrorsFields() throws Exception {
-
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/createDoctor")
-                        .content(json).contentType(MediaType.APPLICATION_JSON).)
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(model().attributeHasErrors("person"))
-                .andReturn();
-    }*/
+        Assertions.assertThat(specialties).isInstanceOf(DoctorSpecialty[].class);
+        DoctorSpecialty[] doctorSpecialties = (DoctorSpecialty[]) specialties;
+        Assertions.assertThat(doctorSpecialties).containsAll(Arrays.stream(DoctorSpecialty.values()).toList());
+        Assertions.assertThat(viewName).isEqualTo("createDoctor");
+    }
 
     @Test
-    @WithMockUser("qwerty")
     void delete() throws Exception {
         DoctorEntity doctor1 = DoctorEntity.builder()
                 .doctorSpecialty(DoctorSpecialty.CARDIOLOGIST)
